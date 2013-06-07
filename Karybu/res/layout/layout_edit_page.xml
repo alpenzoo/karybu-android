@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical"
+    android:weightSum="1" >
+
+    <EditText
+        android:id="@+id/PAGE_EDITOR_BROWSER_TITLE"
+        style="@style/edittext"
+        android:layout_weight="0.07"
+        android:hint="@string/post_title"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:id="@+id/TEXT_EDITOR_HOLDER"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.93" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1" >
+
+        <Button
+            android:id="@+id/PAGE_EDITOR_SAVE"
+            style="@style/button"
+            android:layout_alignParentRight="true"
+            android:text="@string/save" />
+    </RelativeLayout>
+
+</LinearLayout>

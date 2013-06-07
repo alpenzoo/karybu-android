@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="92dp"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <Button
+        android:id="@+id/PAGEITEMCELL_DELETEBUTTON"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="DELETE" />
+
+    <TextView
+        android:id="@+id/PAGEITEMCELL_TEXTVIEW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="PAGE TITLE"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/PAGE_PAGE_URL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/PAGEITEMCELL_TEXTVIEW"
+        android:layout_toLeftOf="@+id/PAGEITEMCELL_DELETEBUTTON"
+        android:singleLine="true"
+        android:text="PAGE URL" />
+
+</RelativeLayout>

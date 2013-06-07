@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/img_diglog_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_warning"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txt_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/img_diglog_icon"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/img_diglog_icon"
+        android:text="Title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txt_dialog_title"
+        android:layout_below="@+id/txt_dialog_title"
+        android:layout_marginTop="5dp"
+        android:text="Message" />
+
+    <LinearLayout
+        android:id="@+id/lyt_dialog_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/txt_dialog_message"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/btn_dialog_ok"
+            style="@style/button"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/btn_dialog_cancel"
+            style="@style/button"
+            android:text="@string/cancel"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

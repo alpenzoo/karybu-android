@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Karybu</string>
+    <string name="invalid_url">Invalid URL&#8230;</string>
+    <string name="no_textyle">No textyle installed on your site</string>
+    <string name="theme_save_button">Save</string>
+    <string name="main_page_theme_button">Themes</string>
+    <string name="session_expired_msg">Please login again because your session has been expired.</string>
+    <string name="welcome_screen_description">Easily manage your karybu site \nfrom any mobile device</string>
+    <string name="welcome_screen_add_new_website">Add new website</string>
+    <string name="welcome_screen_term_of_use"><u>terms of use</u></string>
+    <string name="welcome_screen_logo_description">Logo</string>
+    <string name="welcome_screen_checking_connection">Checking connection&#8230;</string>
+    <string name="login_hint_website_url">Website URL</string>
+    <string name="login_hint_username">username</string>
+    <string name="login_hint_password">password</string>
+    <string name="login_add_website_caption">Add website</string>
+    <string name="login_invalid_input_title">Invalid Input</string>
+    <string name="login_invalid_input_msg">Please input all fields.</string>
+    <string name="login_error_msg">There is some problem while trying to add website.</string>
+    <string name="wrong_password_dialog_title">Wrong password</string>
+    <string name="wrong_password_dialog_description">Please check your password</string>
+    <string name="wrong_password_dialog_close_button">close</string>
+    <string name="checking_connection_dialog_title">Checking connection</string>
+    <string name="checking_connection_dialog_description">This should only take a couple of seconds</string>
+    <string name="checking_connection_dialog_close_button">close</string>
+    <string name="dashboard_new_post">NEW POST</string>
+    <string name="dashboard_manage_posts">MANAGE POSTS</string>
+    <string name="dashboard_new_page">NEW PAGE</string>
+    <string name="dashboard_manage_pages">MANAGE PAGES</string>
+    <string name="dashboard_comments">COMMENTS</string>
+    <string name="dashboard_users">USERS</string>
+    <string name="dashboard_menu_manager">MENU MANAGER</string>
+    <string name="dashboard_quick_settings">QUICK SETTINGS</string>
+    <string name="dashboard_go_to_dashboard">GO TO DASHBOARD</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_settings_website_manager">Website manager</string>
+    <string name="menu_settings_help">Help</string>
+    <string name="menu_settings_about">About</string>
+
+    <!-- Post -->
+    <string name="all_post">All Posts</string>
+    <string name="published">Published</string>
+    <string name="drafts">Drafts</string>
+    <string name="trash">Trash</string>
+    
+    <!-- New post layout -->
+    <string name="post_title">Post title</string>
+    <string name="url">URL</string>
+    <string name="body">Body</string>
+    <string name="save_and_publish">Save and publish</string>
+    <string name="save">Save</string>
+
+    <!-- Edit post layout -->
+    <string name="delete_post">Delete</string>
+
+    <!-- Array -->
+    <string-array name="page_types">
+        <item>Widget page</item>
+        <item>Article page</item>
+        <item>External link</item>
+    </string-array>
+
+    <!-- New Page -->
+    <string name="newpage_page_name">Page name</string>
+    <string name="newpage_browser_title">Browser title</string>
+    <string name="newpage_caching_time">Caching time</string>
+    <string name="newpage_button_save">Save</string>
+
+    <!-- Editor control -->
+    <string name="bold"><b>B</b></string>
+    <string name="italic"><i>I</i></string>
+    <string name="underline"><u>U</u></string>
+    <string name="link">Link</string>
+    <string name="link_text">Link text</string>
+    <string name="link_url">Link URL</string>
+    <string name="add_image">Add Image</string>
+
+    <!-- Delete menu item dialog -->
+    <string name="delete_menu_item_dialog_title">Attention</string>
+    <string name="delete_menu_item_dialog_description">Do you want to delete this menu item?</string>
+    <string name="delete_menu_item_dialog_yes">Yes</string>
+    <string name="delete_menu_item_dialog_no">No</string>
+
+    <!-- Global -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+    <string name="reply">Reply</string>
+    <string name="error">Error</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="logging">Logging&#8230;</string>
+
+    <!-- Actionbar -->
+    <string name="actionbar_back">&lt;</string>
+
+    <!-- About -->
+    <string name="about_application">Android app for Karybu CMS - native app to manage your website content</string>
+    <!-- help -->
+    <string name="help_description"><p>This is \"help\" description</p></string>
+
+</resources>

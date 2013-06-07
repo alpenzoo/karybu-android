@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/ADD_POST_POST_TITLE"
+        style="@style/edittext"
+        android:hint="@string/post_title"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/ADD_POST_POST_URL"
+        style="@style/edittext"
+        android:hint="@string/url"
+        android:singleLine="true" />
+
+    <LinearLayout
+        android:id="@+id/HTML_EDITOR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/ADD_POST_DELETE_BUTTON"
+            style="@style/button"
+            android:text="@string/delete_post" />
+
+        <Button
+            android:id="@+id/ADD_POST_SAVE_AND_PUBLISH_BUTTON"
+            style="@style/button"
+            android:layout_centerHorizontal="true"
+            android:text="@string/save_and_publish" />
+
+        <Button
+            android:id="@+id/ADD_POST_SAVE_BUTTON"
+            style="@style/button"
+            android:layout_alignParentRight="true"
+            android:text="@string/save" />
+    </RelativeLayout>
+
+</LinearLayout>

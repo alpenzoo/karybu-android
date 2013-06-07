@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/EDITOR_CONTENT"
+        style="@style/edittext"
+        android:layout_weight="1"
+        android:gravity="top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_editor_control"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/EDITOR_BOLD"
+            style="@style/btn_editor_toggle"
+            android:button="@drawable/bg_toggle_bold" />
+
+        <CheckBox
+            android:id="@+id/EDITOR_ITALIC"
+            style="@style/btn_editor_toggle"
+            android:button="@drawable/bg_toggle_italic" />
+
+        <CheckBox
+            android:id="@+id/EDITOR_UNDERLINE"
+            style="@style/btn_editor_toggle"
+            android:button="@drawable/bg_toggle_underline" />
+
+        <View style="@style/editor_divider" />
+
+        <ImageButton
+            android:id="@+id/EDITOR_LINK"
+            style="@style/btn_editor"
+            android:background="@drawable/bg_image_button"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_link"
+            android:text="@string/link" />
+
+        <Button
+            android:id="@+id/EDITOR_ADD_IMAGE"
+            style="@style/btn_editor"
+            android:text="@string/add_image"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

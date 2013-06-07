@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="splash_description">#96F1E7</color>
+    <color name="terms_of_use">#8E8E91</color>
+    <color name="dashboard_divider">#333A48</color>
+    <color name="editor_divider">#282d36</color>
+    
+    <!-- controls -->
+    <color name="button_text">#FFFFFF</color>
+    <color name="round_button_text">#FFFFFF</color>
+    <color name="edittext_text">#FFFFFF</color>
+    <color name="segment_off">#CCCCCC</color>
+    <color name="segment_on">#63D078</color>
+    
+    <!-- visitor graph -->
+    <color name="visitor_graph">#63D078</color>
+    <color name="bg_visitor_graph">#1163D078</color>
+    
+    <!-- General -->
+    <color name="white">#FFFFFF</color>
+    
+</resources>

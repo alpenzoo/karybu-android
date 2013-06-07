@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/ADDPAGE_PAGETYPESPINNER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:entries="@array/page_types" />
+
+        <EditText
+            android:id="@+id/ADDPAGE_PAGENAME"
+            style="@style/edittext"
+            android:layout_margin="5dp"
+            android:hint="@string/newpage_page_name" />
+
+        <EditText
+            android:id="@+id/ADDPAGE_BROWSERTITLE"
+            style="@style/edittext"
+            android:layout_margin="5dp"
+            android:hint="@string/newpage_browser_title" />
+
+        <EditText
+            android:id="@+id/ADDPAGE_CACHING"
+            style="@style/edittext"
+            android:layout_margin="5dp"
+            android:hint="@string/newpage_caching_time" />
+
+        <Spinner
+            android:id="@+id/ADDPAGE_LAYOUTSPINNER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/ADDPAGE_SAVEBUTTON"
+        style="@style/button"
+        android:layout_gravity="right"
+        android:layout_margin="10dp"
+        android:text="@string/newpage_button_save" />
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/ADDMENUTOAST_EDITTEXT"
+        style="@style/edittext"
+        android:hint="Menu name" />
+
+    <Button
+        android:id="@+id/ADDMENUTOAST_BUTTON"
+        style="@style/button"
+        android:layout_gravity="center_horizontal"
+        android:text="Done" />
+
+</LinearLayout>

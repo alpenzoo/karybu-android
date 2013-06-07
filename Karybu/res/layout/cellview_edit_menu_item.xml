@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <Button
+        android:id="@+id/MENUITEMEDIT_EDITBUTTON"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="EDIT" />
+
+    <Button
+        android:id="@+id/MENUITEMEDIT_DELETEBUTTON"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/MENUITEMEDIT_EDITBUTTON"
+        android:text="DELETE" />
+
+    <TextView
+        android:id="@+id/MENUITEMEDIT_TITLE_TEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/MENUITEMEDIT_EDITBUTTON"
+        android:layout_alignParentLeft="true"
+        android:text="ITEM TITLE" />
+
+    <Button
+        android:id="@+id/MENUITEMEDIT_UPBUTTON"
+        style="@style/round_button"
+        android:layout_alignBaseline="@+id/MENUITEMEDIT_DELETEBUTTON"
+        android:layout_alignParentLeft="true"
+        android:text="UP" />
+
+    <Button
+        android:id="@+id/MENUITEMEDIT_DOWNBUTTON"
+        style="@style/round_button"
+        android:layout_alignBaseline="@+id/MENUITEMEDIT_DELETEBUTTON"
+        android:layout_toRightOf="@+id/MENUITEMEDIT_UPBUTTON"
+        android:text="DOWN" />
+
+    <Button
+        android:id="@+id/MENUITEMEDIT_SUBMENUBUTTON"
+        style="@style/round_button"
+        android:layout_alignBaseline="@+id/MENUITEMEDIT_DELETEBUTTON"
+        android:layout_toRightOf="@+id/MENUITEMEDIT_DOWNBUTTON"
+        android:text=">" />
+
+</RelativeLayout>

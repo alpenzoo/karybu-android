@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <Button
+        android:id="@+id/POST_VIEW_POST"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="VIEW POST" />
+
+    <Button
+        android:id="@+id/POST_UNPUBLISH_POST"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/POST_VIEW_POST"
+        android:text="UNPUBLISH" />
+
+    <TextView
+        android:id="@+id/POST_POST_TITLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/POST_VIEW_POST"
+        android:layout_alignParentLeft="true"
+        android:text="POST TITLE" />
+
+    <TextView
+        android:id="@+id/POST_POST_COMMENT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/POST_UNPUBLISH_POST"
+        android:layout_alignParentLeft="true"
+        android:text="Comment count" />
+
+</RelativeLayout>

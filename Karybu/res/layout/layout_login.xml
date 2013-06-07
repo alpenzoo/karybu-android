@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/lyt_login_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/LOGIN_ADDRESS"
+            style="@style/login_form_edittext"
+            android:hint="@string/login_hint_website_url"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/LOGIN_USERNAME"
+            style="@style/login_form_edittext"
+            android:hint="@string/login_hint_username"
+            android:inputType="textWebEmailAddress" />
+
+        <EditText
+            android:id="@+id/LOGIN_PASSWORD"
+            style="@style/login_form_edittext"
+            android:hint="@string/login_hint_password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/LOGIN_BUTTON"
+            style="@style/button"
+            android:layout_margin="15dp"
+            android:text="@string/login_add_website_caption" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lyt_login_form"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/LOGO_LOGIN"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/welcome_screen_logo_description"
+            android:src="@drawable/ic_splash" />
+    </LinearLayout>
+
+</RelativeLayout>

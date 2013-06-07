@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/item_key"
+                android:text="Default language:" />
+
+            <Spinner
+                android:id="@+id/GLOBALSETTINGS_SPINNER_DEFAULTLANG"
+                style="@style/item_value" />
+
+            <TextView
+                style="@style/item_key"
+                android:text="Local standard time:" />
+
+            <Spinner
+                android:id="@+id/GLOBALSETTINGS_SPINNER_LOCAL"
+                style="@style/item_value" />
+
+            <TextView
+                style="@style/item_key"
+                android:text="Selected languages:" />
+
+            <TextView
+                android:id="@+id/GLOBALSETTINGS_TEXTVIEW_SELECTED_LANGUAGES"
+                style="@style/item_value"
+                android:background="@drawable/bg_dashboard_item"
+                android:padding="5dp"
+                android:text="Languages" />
+
+            <TextView
+                style="@style/item_key"
+                android:layout_gravity="center_vertical"
+                android:text="Limit admin acces by IP:" />
+
+            <EditText
+                android:id="@+id/GLOBALSETTINGS_EDITTEXT_LIMITIP"
+                style="@style/edittext" />
+
+            <TextView
+                style="@style/item_key"
+                android:text="Default URL:" />
+
+            <EditText
+                android:id="@+id/GLOBALSETTINGS_EDITTEXT_DEFAULTURL"
+                style="@style/edittext" />
+
+            <TextView
+                style="@style/item_key"
+                android:layout_gravity="center_vertical"
+                android:text="Use SSL:" />
+
+            <RadioGroup
+                style="@style/item_value"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/GLOBALSETTINGS_RADIO_SSL_NEVER"
+                    style="@style/radiobutton"
+                    android:text="Never" />
+
+                <RadioButton
+                    android:id="@+id/GLOBALSETTINGS_RADIO_SSL_OPTIONAL"
+                    style="@style/radiobutton"
+                    android:text="Optional" />
+
+                <RadioButton
+                    android:id="@+id/GLOBALSETTINGS_RADIO_SSL_ALWAYS"
+                    style="@style/radiobutton"
+                    android:text="Always" />
+            </RadioGroup>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2" >
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_MOBILETEMPL"
+                    style="@style/item_checkbox"
+                    android:layout_column="0"
+                    android:text="Enable mobile template" />
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_REWRITEMODE"
+                    style="@style/item_checkbox"
+                    android:layout_column="1"
+                    android:text="Rewrite mod" />
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_ENABLESSO"
+                    style="@style/item_checkbox"
+                    android:layout_column="0"
+                    android:text="Enable SSO" />
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_SESSIONDB"
+                    style="@style/item_checkbox"
+                    android:layout_column="1"
+                    android:text="Use session db" />
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_QMAIL"
+                    style="@style/item_checkbox"
+                    android:layout_column="0"
+                    android:text="Enable Qmail" />
+
+                <CheckBox
+                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_HTMLDTD"
+                    style="@style/item_checkbox"
+                    android:layout_column="1"
+                    android:text="Enable HTML DTD" />
+            </GridLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/GLOBALSETTINGS_SAVEBUTTON"
+        style="@style/button"
+        android:layout_gravity="right"
+        android:text="Save" />
+
+</LinearLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            style="@style/item_key"
+            android:text="E-mail:" />
+
+        <TextView
+            android:id="@+id/EDITMEMBER_EMAIL"
+            style="@style/item_value"
+            android:text="loading..." />
+
+        <TextView
+            style="@style/item_key"
+            android:text="Nickname:" />
+
+        <EditText
+            android:id="@+id/EDITMEMBER_NICKNAME"
+            style="@style/edittext" />
+
+        <TextView
+            style="@style/item_key"
+            android:text="Description:" />
+
+        <EditText
+            android:id="@+id/EDITMEMBER_DESCRIPTION"
+            style="@style/edittext" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:columnCount="2" >
+
+            <CheckBox
+                android:id="@+id/EDITMEMBER_ALLOWMAILING"
+                style="@style/item_checkbox"
+                android:layout_column="0"
+                android:text="Allow mailing" />
+
+            <CheckBox
+                android:id="@+id/EDITMEMBER_ALLOWMESSAGE"
+                style="@style/item_checkbox"
+                android:layout_column="1"
+                android:text="Allow message" />
+
+            <CheckBox
+                android:id="@+id/EDITMEMBER_APPROVEMEMBER"
+                style="@style/item_checkbox"
+                android:layout_column="0"
+                android:text="Approved" />
+
+            <CheckBox
+                android:id="@+id/EDITMEMBER_ISADMIN"
+                style="@style/item_checkbox"
+                android:layout_column="1"
+                android:text="Admin" />
+
+            <Button
+                android:id="@+id/EDITMEMBER_SAVE"
+                style="@style/button"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Save" />
+        </GridLayout>
+    </LinearLayout>
+
+</ScrollView>

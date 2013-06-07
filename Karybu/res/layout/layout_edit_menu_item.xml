@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/LINK_TEXT"
+        style="@style/edittext"
+        android:layout_margin="5dp"
+        android:hint="Link text" />
+
+    <Spinner
+        android:id="@+id/PAGE_TYPES"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:entries="@array/page_types" />
+
+    <Spinner
+        android:id="@+id/AVAILABLE_PAGES"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" />
+
+    <CheckBox
+        android:id="@+id/NEW_WINDOW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:button="@drawable/bg_checkbox"
+        android:text="Open page in a new window" />
+
+    <Button
+        android:id="@+id/EDIT_MENU_SAVE_BUTTON"
+        style="@style/button"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:text="Save" />
+
+</LinearLayout>

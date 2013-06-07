@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_content"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <LinearLayout
+                android:id="@+id/DASHBOARD_FRAGMENT_HOLDER"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_statistic"
+                android:padding="10dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/DASHBOARD_MANAGE_POSTS"
+                    style="@style/round_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/dashboard_manage_posts" />
+
+                <TextView
+                    android:id="@+id/DASHBOARD_NEW_POST"
+                    style="@style/dashboard_item"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/DASHBOARD_MANAGE_POSTS"
+                    android:drawableLeft="@drawable/ic_new_post"
+                    android:text="@string/dashboard_new_post" />
+            </RelativeLayout>
+
+            <View style="@style/dashboard_divider" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/DASHBOARD_MANAGE_PAGES"
+                    style="@style/round_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/dashboard_manage_pages" />
+
+                <TextView
+                    android:id="@+id/DASHBOARD_NEW_PAGE"
+                    style="@style/dashboard_item"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/DASHBOARD_MANAGE_PAGES"
+                    android:drawableLeft="@drawable/ic_new_page"
+                    android:text="@string/dashboard_new_page" />
+            </RelativeLayout>
+
+            <View style="@style/dashboard_divider" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/DASHBOARD_COMMENTS"
+                    style="@style/dashboard_item_full_width"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:drawableLeft="@drawable/ic_comment"
+                    android:text="@string/dashboard_comments" />
+
+                <TextView
+                    android:id="@+id/DASHBOARD_COMMENT_COUNT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_new_comment"
+                    android:clickable="false"
+                    android:gravity="center"
+                    android:text="5 NEW"
+                    android:textSize="11sp" />
+            </RelativeLayout>
+
+            <View style="@style/dashboard_divider" />
+
+            <TextView
+                android:id="@+id/DASHBOARD_USERS"
+                style="@style/dashboard_item_full_width"
+                android:drawableLeft="@drawable/ic_user"
+                android:text="@string/dashboard_users" />
+
+            <View style="@style/dashboard_divider" />
+
+            <TextView
+                android:id="@+id/DASHBOARD_MENU_MANAGER"
+                style="@style/dashboard_item_full_width"
+                android:drawableLeft="@drawable/ic_menu_mangement"
+                android:text="@string/dashboard_menu_manager" />
+
+            <View style="@style/dashboard_divider" />
+
+            <TextView
+                android:id="@+id/DASHBOARD_QUICK_SETTINGS"
+                style="@style/dashboard_item_full_width"
+                android:drawableLeft="@drawable/ic_quick_setting"
+                android:text="@string/dashboard_quick_settings" />
+
+            <View style="@style/dashboard_divider" />
+
+            <TextView
+                android:id="@+id/DASHBOARD_MANAGE_WEBSITE"
+                style="@style/dashboard_item_full_width"
+                android:drawableLeft="@drawable/ic_go_to_dashboard"
+                android:text="@string/dashboard_go_to_dashboard" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
