@@ -17,6 +17,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txt_graph_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -42,6 +43,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txt_last_week_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -55,20 +57,25 @@
             android:orientation="horizontal" >
 
             <ImageButton
+                android:id="@+id/btn_statistic_arrow_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_image_button"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/btn_statistic_arrow_left" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_arrow_thumb" />
 
             <ImageButton
+                android:id="@+id/btn_statistic_arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_image_button"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/btn_statistic_arrow_right" />
         </LinearLayout>
     </LinearLayout>
