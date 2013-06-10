@@ -27,8 +27,7 @@ import com.arnia.karybu.controls.CustomDialog;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.google.android.gcm.GCMRegistrar;
 
-public class LoginController extends KarybuActivity implements
-		OnClickListener {
+public class LoginController extends KarybuActivity implements OnClickListener {
 
 	private EditText addressEditText;
 	private EditText usernameEditText;
@@ -136,90 +135,92 @@ public class LoginController extends KarybuActivity implements
 			super.onPostExecute(result);
 			dialog.dismiss();
 
-			if (request_url_error || xmlData == null) {
-				dialog = new CustomDialog(LoginController.this);
-				dialog.setIcon(R.drawable.ic_warning);
-				dialog.setTitle(R.string.error);
-				dialog.setMessage(R.string.login_error_msg);
-				dialog.setPositiveButton(getString(R.string.close),
-						new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-				dialog.show();
-			}
+			if (!request_url_error && xmlData != null) {
+				try {
+					// parse the response
+					Serializer serializer = new Persister();
 
-			try {
-				// parse the response
-				Serializer serializer = new Persister();
+					Reader reader = new StringReader(xmlData);
+					KarybuResponse response = serializer.read(
+							KarybuResponse.class, reader, false);
 
-				Reader reader = new StringReader(xmlData);
-				KarybuResponse response = serializer.read(KarybuResponse.class, reader,
-						false);
+					registerForPushNotification();
 
-				registerForPushNotification();
-
-				// check if the response was positive
-				if (response.value.equals("true")) {
-					// Write site data to database
-					KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper
-							.getDBHelper(getApplicationContext());
-					SQLiteDatabase db = dbHelper.getReadableDatabase();
-					String[] args = { websiteUrl };
-					Cursor cursor = db.rawQuery(
-							"SELECT count(*) countUrl FROM "
-									+ dbHelper.KARYBU_SITES + " WHERE "
-									+ dbHelper.KARYBU_SITES_SITEURL + "=?", args);
-					cursor.moveToFirst();
-					int urlCount = cursor.getInt(0);
-					cursor.close();
-					db.close();
-					if (urlCount == 0) {
-						db = dbHelper.getWritableDatabase();
-						ContentValues values = new ContentValues();
-						values.put(dbHelper.KARYBU_SITES_SITEURL, websiteUrl);
-						values.put(dbHelper.KARYBU_SITES_PASSWORD, password);
-						values.put(dbHelper.KARYBU_SITES_USERNAME, username);
-						db.insert(dbHelper.KARYBU_SITES, null,
-								values);
-
+					// check if the response was positive
+					if (response.value.equals("true")) {
+						// Write site data to database
+						KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper
+								.getDBHelper(getApplicationContext());
+						SQLiteDatabase db = dbHelper.getReadableDatabase();
+						String[] args = { websiteUrl };
+						Cursor cursor = db.rawQuery(
+								"SELECT count(*) countUrl FROM "
+										+ dbHelper.KARYBU_SITES + " WHERE "
+										+ dbHelper.KARYBU_SITES_SITEURL + "=?",
+								args);
+						cursor.moveToFirst();
+						int urlCount = cursor.getInt(0);
+						cursor.close();
 						db.close();
+						if (urlCount == 0) {
+							db = dbHelper.getWritableDatabase();
+							ContentValues values = new ContentValues();
+							values.put(dbHelper.KARYBU_SITES_SITEURL,
+									websiteUrl);
+							values.put(dbHelper.KARYBU_SITES_PASSWORD, password);
+							values.put(dbHelper.KARYBU_SITES_USERNAME, username);
+							db.insert(dbHelper.KARYBU_SITES, null, values);
+
+							db.close();
+						}
+
+						// Add site id to default shared preference
+						SharedPreferences pref = PreferenceManager
+								.getDefaultSharedPreferences(getApplication());
+						Editor prefEditor = pref.edit();
+						prefEditor.putString("ACTIVE_SITE", websiteUrl);
+						prefEditor.commit();
+
+						// call dash board activity
+						Intent callDashboard = new Intent(LoginController.this,
+								MainActivityController.class);
+						startActivity(callDashboard);
+						finish();
+						return;
+					} else {
+						// Alert wrong password
+						dialog = new CustomDialog(LoginController.this);
+						dialog.setPositiveButton(getString(R.string.close),
+								new OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialog.dismiss();
+									}
+								});
+						dialog.setIcon(R.drawable.ic_warning);
+						dialog.setTitle(R.string.wrong_password_dialog_title);
+						dialog.setMessage(R.string.wrong_password_dialog_description);
+						dialog.show();
+						return;
 					}
-
-					// Add site id to default shared preference
-					SharedPreferences pref = PreferenceManager
-							.getDefaultSharedPreferences(getApplication());
-					Editor prefEditor = pref.edit();
-					prefEditor.putString("ACTIVE_SITE", websiteUrl);
-					prefEditor.commit();
-
-					// call dash board activity
-					Intent callDashboard = new Intent(
-							LoginController.this,
-							MainActivityController.class);
-					startActivity(callDashboard);
-					finish();
-				} else {
-					// Alert wrong password
-					dialog = new CustomDialog(LoginController.this);
-					dialog.setPositiveButton(getString(R.string.close),
-							new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									dialog.dismiss();
-								}
-							});
-					dialog.setIcon(R.drawable.ic_warning);
-					dialog.setTitle(R.string.wrong_password_dialog_title);
-					dialog.setMessage(R.string.wrong_password_dialog_description);
-					dialog.show();
-
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+
+			dialog = new CustomDialog(LoginController.this);
+			dialog.setIcon(R.drawable.ic_warning);
+			dialog.setTitle(R.string.error);
+			dialog.setMessage(R.string.login_error_msg);
+			dialog.setPositiveButton(getString(R.string.close),
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+			dialog.show();
+			return;
 		}
 
 	}

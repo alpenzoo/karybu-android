@@ -21,7 +21,7 @@
                 android:layout_height="260dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_statistic"
-                android:padding="10dp" />
+                android:padding="5dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

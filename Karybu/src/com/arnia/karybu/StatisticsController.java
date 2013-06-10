@@ -1,10 +1,13 @@
 package com.arnia.karybu;
 
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.model.TimeSeries;
@@ -15,7 +18,6 @@ import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
 import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine.Type;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
@@ -28,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuDayStats;
 import com.arnia.karybu.classes.KarybuHost;
@@ -39,25 +40,56 @@ public class StatisticsController extends KarybuFragment implements
 	private View view;
 	private KarybuArrayList array;
 	private GraphicalView graphicalView;
+	private TextView txtGraphDate;
+	private TextView txtLastWeekCount;
+	private XYMultipleSeriesRenderer renderer;
+	private Date startDate;
+	private Date endDate;
+	private int maxVisitor;
+	private final double ONE_DAY = 24 * 60 * 60 * 1000;
+	private int currentRange; // Current visible range of the graph
+	private int rangeCount;
+	private final int DAYS_PER_RANGE = 7;
+	private ImageButton btnArrowLeft;
+	private ImageButton btnArrowRight;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		view = inflater.inflate(R.layout.layout_statistics, container, false);
+		txtGraphDate = (TextView) view.findViewById(R.id.txt_graph_date);
+		txtGraphDate.setText("");
+		txtLastWeekCount = (TextView) view
+				.findViewById(R.id.txt_last_week_count);
+		txtLastWeekCount.setText("");
 
-		ImageButton btnArrowLeft = (ImageButton) view
+		btnArrowLeft = (ImageButton) view
 				.findViewById(R.id.btn_statistic_arrow_left);
 		btnArrowLeft.setOnClickListener(this);
-		ImageButton btnArrowRight = (ImageButton) view
+		btnArrowLeft.setEnabled(false);
+		btnArrowRight = (ImageButton) view
 				.findViewById(R.id.btn_statistic_arrow_right);
 		btnArrowRight.setOnClickListener(this);
+		btnArrowRight.setEnabled(false);
 
 		GetStatisticsAsyncTask task = new GetStatisticsAsyncTask();
 		task.execute();
 
 		return view;
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_statistic_arrow_left:
+			moveGraphToLeft();
+			break;
+		case R.id.btn_statistic_arrow_right:
+			moveGraphToRight();
+			break;
+		}
 	}
 
 	// Async task for loading the statistics
@@ -100,12 +132,15 @@ public class StatisticsController extends KarybuFragment implements
 			if (stats.size() == 0)
 				return;
 
+			rangeCount = (int) Math.ceil(1.0 * stats.size() / DAYS_PER_RANGE);
+
+			// Time Chart
 			String startDateStr = stats.get(0).date;
 			String endDateStr = stats.get(stats.size() - 1).date;
 			SimpleDateFormat spd = new SimpleDateFormat("yyyyMMdd");
 			String graphDateStr = "";
-			Date startDate = new Date();
-			Date endDate = new Date();
+			startDate = new Date();
+			endDate = new Date();
 			try {
 				startDate = spd.parse(startDateStr);
 				endDate = spd.parse(endDateStr);
@@ -115,14 +150,12 @@ public class StatisticsController extends KarybuFragment implements
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			TextView txtGraphDate = (TextView) view
-					.findViewById(R.id.txt_graph_date);
 			txtGraphDate.setText(graphDateStr);
 
 			TimeSeries series = new TimeSeries("Visit Date");
 
 			spd = new SimpleDateFormat("yyyyMMdd");
-			int maxVisitor = 0;
+			maxVisitor = 0;
 			int lastWeekCount = 0;
 			for (int i = 0; i < stats.size(); i++) {
 				KarybuDayStats stat = stats.get(i);
@@ -141,48 +174,93 @@ public class StatisticsController extends KarybuFragment implements
 
 				series.add(date, visitorCount);
 			}
-			TextView txtLastWeekCount = (TextView) view
-					.findViewById(R.id.txt_last_week_count);
-			txtLastWeekCount.setText(lastWeekCount + "");
+			NumberFormat numberFormat = NumberFormat.getNumberInstance();
+			txtLastWeekCount.setText(numberFormat.format(lastWeekCount));
 
 			XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 			dataset.addSeries(series);
 
-			XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
-
-			renderer.setAxisTitleTextSize(16);
-			renderer.setChartTitleTextSize(20);
-			renderer.setLabelsTextSize(15);
-			renderer.setLegendTextSize(15);
-			renderer.setPointSize(5f);
-			renderer.setMargins(new int[] { 20, 30, 15, 20 });
+			renderer = new XYMultipleSeriesRenderer();
 
 			XYSeriesRenderer r = new XYSeriesRenderer();
 			r.setColor(getResources().getColor(R.color.visitor_graph));
-			r.setFillPoints(true);
 			r.setLineWidth(2);
 			FillOutsideLine fill = new FillOutsideLine(Type.BELOW);
 			fill.setColor(getResources().getColor(R.color.bg_visitor_graph));
 			r.addFillOutsideLine(fill);
 			renderer.addSeriesRenderer(r);
 
-			renderer.setXAxisMin(startDate.getTime());
-			renderer.setXAxisMax(endDate.getTime());
+			renderer.setMargins(new int[] { 20, 30, 5, 20 }); // Top, left,
+																// bottom, right
+			renderer.setLabelsTextSize(17);
 			renderer.setYAxisMin(0);
 			renderer.setYAxisMax(maxVisitor * 1.2);
-			renderer.setXLabels(8);
 			renderer.setYLabels(5);
-			renderer.setPanLimits(new double[] { 1, 8, 0, maxVisitor * 1.2 });
+			currentRange = rangeCount;
+			if (stats.size() > DAYS_PER_RANGE) {
+				renderer.setXLabels(stats.size() / 2);
+				renderer.setRange(new double[] {
+						endDate.getTime() - (ONE_DAY * DAYS_PER_RANGE),
+						endDate.getTime(), 0, maxVisitor * 1.2 });
+				btnArrowLeft.setEnabled(true);
+			} else {
+				renderer.setXLabels(stats.size());
+				renderer.setRange(new double[] { startDate.getTime(),
+						endDate.getTime() + ONE_DAY, 0, maxVisitor * 1.2 });
+			}
 			renderer.setAxesColor(Color.LTGRAY);
 			renderer.setLabelsColor(Color.LTGRAY);
 
 			renderer.setShowGrid(true);
-			renderer.setApplyBackgroundColor(true);
 			renderer.setBackgroundColor(Color.TRANSPARENT);
 			renderer.setXLabelsAlign(Align.CENTER);
-			renderer.setYLabelsAlign(Align.RIGHT);
+			renderer.setYLabelsAlign(Align.LEFT);
 			renderer.setZoomButtonsVisible(false);
 			renderer.setShowLegend(false);
+			renderer.setPanEnabled(false);
+			renderer.setZoomEnabled(false);
+
+			numberFormat = new NumberFormat() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public Number parse(String string, ParsePosition position) {
+					throw new UnsupportedOperationException();
+				}
+
+				@Override
+				public StringBuffer format(long value, StringBuffer buffer,
+						FieldPosition field) {
+					if (value == 0)
+						return buffer.append("");
+					else if (value < 1000)
+						return buffer.append(value);
+					else {
+						double newValue = value / 1000;
+						DecimalFormat decimalFormat = new DecimalFormat("#.#");
+						return buffer.append(decimalFormat.format(newValue)
+								+ "k");
+					}
+				}
+
+				@Override
+				public StringBuffer format(double value, StringBuffer buffer,
+						FieldPosition field) {
+					if (value == 0)
+						return buffer.append("");
+					else if (value < 1000) {
+						return buffer.append((long) value);
+					} else {
+						value = value / 1000;
+						DecimalFormat decimalFormat = new DecimalFormat("#.#");
+						return buffer.append(decimalFormat.format(value) + "k");
+					}
+
+				}
+			};
+
+			renderer.setLabelFormat(numberFormat);
 
 			graphicalView = ChartFactory.getTimeChartView(getActivity(),
 					dataset, renderer, "E");
@@ -190,20 +268,56 @@ public class StatisticsController extends KarybuFragment implements
 			LinearLayout lytStatistic = (LinearLayout) view
 					.findViewById(R.id.lyt_visitor_statistic);
 			lytStatistic.addView(graphicalView);
-
 		}
+
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.btn_statistic_arrow_left:
-			graphicalView.setScrollX(11);
-			break;
-		case R.id.btn_statistic_arrow_right:
-			graphicalView.setScrollX(11);
-			break;
+	private void moveGraphToLeft() {
+		if (currentRange == 0)
+			return;
+
+		currentRange--;
+
+		double xStart, xEnd;
+
+		if (currentRange == 0) {
+			btnArrowLeft.setEnabled(false);
+			xStart = startDate.getTime();
+			xEnd = xStart + (DAYS_PER_RANGE * ONE_DAY);
+		} else {
+			xStart = startDate.getTime()
+					+ (currentRange * DAYS_PER_RANGE * ONE_DAY);
+			xEnd = xStart + (DAYS_PER_RANGE * ONE_DAY);
 		}
+
+		renderer.setRange(new double[] { xStart, xEnd, 0, maxVisitor * 1.2 });
+		graphicalView.repaint();
+
+		btnArrowRight.setEnabled(true);
+	}
+
+	private void moveGraphToRight() {
+		if (currentRange == rangeCount)
+			return;
+
+		currentRange++;
+
+		double xStart, xEnd;
+
+		if (currentRange == rangeCount) {
+			btnArrowRight.setEnabled(false);
+			xEnd = endDate.getTime();
+			xStart = xEnd - (DAYS_PER_RANGE * ONE_DAY);
+		} else {
+			xStart = startDate.getTime()
+					+ (currentRange * DAYS_PER_RANGE * ONE_DAY);
+			xEnd = xStart + (DAYS_PER_RANGE * ONE_DAY);
+		}
+
+		renderer.setRange(new double[] { xStart, xEnd, 0, maxVisitor * 1.2 });
+		graphicalView.repaint();
+
+		btnArrowLeft.setEnabled(true);
 	}
 
 }
