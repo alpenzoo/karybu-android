@@ -45,7 +45,6 @@ public class DashboardController extends KarybuFragment implements
 	private SiteAdapter siteAdapter;
 	private KarybuSite selectingSite;
 	private View view;
-	private StatisticsController statisticController;
 
 	private TextView newPost;
 	private TextView managePosts;
@@ -99,7 +98,7 @@ public class DashboardController extends KarybuFragment implements
 		this.view = inflater.inflate(R.layout.layout_dashboard, container,
 				false);
 
-		statisticController = new StatisticsController();
+		StatisticsController statisticController = new StatisticsController();
 
 		addNestedFragment(R.id.DASHBOARD_FRAGMENT_HOLDER, statisticController,
 				"StatisticController");
@@ -235,10 +234,6 @@ public class DashboardController extends KarybuFragment implements
 		}
 	}
 
-	private void refreshContent() {
-		statisticController.refreshStatistic();
-	}
-
 	// AsyncTask for LogIn
 	private class LogInInBackground extends
 			AsyncTask<KarybuSite, Void, KarybuSite> {
@@ -302,7 +297,6 @@ public class DashboardController extends KarybuFragment implements
 			}
 			commentCount.setText(count + " NEW");
 
-			refreshContent();
 			dismissProgress();
 		}
 	}
