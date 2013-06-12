@@ -44,7 +44,7 @@
     <string name="published">Published</string>
     <string name="drafts">Drafts</string>
     <string name="trash">Trash</string>
-    
+
     <!-- New post layout -->
     <string name="post_title">Post title</string>
     <string name="url">URL</string>
@@ -98,8 +98,18 @@
     <string name="actionbar_back">&lt;</string>
 
     <!-- About -->
-    <string name="about_application">Android app for Karybu CMS - native app to manage your website content</string>
+    <string name="about_application">Android app for Karybu CMS\nNative app to manage your website content</string>
     <!-- help -->
     <string name="help_description"><p>This is \"help\" description</p></string>
+
+    <!-- Site -->
+    <string name="new_website">New Webasite</string>
+    <string name="edit_website">Edit Website</string>
+    <string name="delete_website">Delete Website</string>
+    <string name="delete_website_msg">Do you want to delete this site?</string>
+
+    <!-- Menu -->
+    <string name="new_menu">New Menu</string>
+    <string name="menu_name">Menu name</string>
 
 </resources>

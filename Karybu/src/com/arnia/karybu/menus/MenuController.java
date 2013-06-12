@@ -3,11 +3,13 @@ package com.arnia.karybu.menus;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-import android.app.Dialog;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,13 +18,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMenu;
+import com.arnia.karybu.controls.KarybuDialog;
 
 public class MenuController extends KarybuFragment implements
 		OnItemClickListener, OnClickListener {
@@ -39,13 +44,10 @@ public class MenuController extends KarybuFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_menu, container,
-				false);
+		View view = inflater.inflate(R.layout.layout_menu, container, false);
 
-		ListView list = (ListView) view
-				.findViewById(R.id.MENU_LISTVIEW);
-		addMenuButton = (Button) view
-				.findViewById(R.id.MENU_ADDBUTTON);
+		ListView list = (ListView) view.findViewById(R.id.MENU_LISTVIEW);
+		addMenuButton = (Button) view.findViewById(R.id.MENU_ADDBUTTON);
 
 		adapter = new MenuAdapter(this.activity);
 
@@ -54,7 +56,8 @@ public class MenuController extends KarybuFragment implements
 
 		addMenuButton.setOnClickListener(this);
 
-		KarybuFragment.startProgress(getActivity(), getString(R.string.loading));
+		KarybuFragment
+				.startProgress(getActivity(), getString(R.string.loading));
 		GetMenusAsyncTask getAsyncRequest = new GetMenusAsyncTask();
 		getAsyncRequest.execute();
 
@@ -80,27 +83,30 @@ public class MenuController extends KarybuFragment implements
 	public void onClick(View v) {
 		// Add button
 		if (v.getId() == R.id.MENU_ADDBUTTON) {
-			final Dialog dialog = new Dialog(this.activity);
+			final KarybuDialog dialog = new KarybuDialog(activity);
+			dialog.setTitle(R.string.new_menu);
 
-			dialog.setContentView(R.layout.layout_add_menu);
-			dialog.setTitle("Add menu");
-
-			final Button doneButton = (Button) dialog
-					.findViewById(R.id.ADDMENUTOAST_BUTTON);
-			final EditText textView = (EditText) dialog
-					.findViewById(R.id.ADDMENUTOAST_EDITTEXT);
-
-			doneButton.setOnClickListener(new OnClickListener() {
+			final EditText txtMenuName = new EditText(activity);
+			txtMenuName.setLayoutParams(new LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			txtMenuName.setBackgroundResource(R.drawable.bg_edittext);
+			txtMenuName
+					.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
+			txtMenuName.setHint(getString(R.string.menu_name));
+			dialog.setView(txtMenuName);
+			dialog.setPositiveButton(R.string.ok, new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					dialog.cancel();
-					KarybuFragment.startProgress(getActivity(), "Saving menu...");
+					KarybuFragment.startProgress(getActivity(),
+							"Saving menu...");
 					AddMenuAsyncTask addMenuAT = new AddMenuAsyncTask();
-					addMenuAT.execute(textView.getText().toString());
-
+					addMenuAT.execute(txtMenuName.getText().toString());
+					dialog.dismiss();
 				}
 			});
+			dialog.setNegativeButton(R.string.cancel);
 			dialog.show();
 		}
 		// delete button
@@ -125,7 +131,8 @@ public class MenuController extends KarybuFragment implements
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("menu_srl", menuSRL);
 			params.put("title", menuName);
-			KarybuHost.getINSTANCE()
+			KarybuHost
+					.getINSTANCE()
 					.postMultipart(params,
 							"/index.php?module=mobile_communication&act=procmobile_communicationMenuDelete");
 			return null;

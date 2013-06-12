@@ -66,7 +66,8 @@
                 android:text="Use SSL:" />
 
             <RadioGroup
-                style="@style/item_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
                 <RadioButton
@@ -85,47 +86,36 @@
                     android:text="Always" />
             </RadioGroup>
 
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2" >
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_MOBILETEMPL"
+                style="@style/item_checkbox"
+                android:layout_column="0"
+                android:text="Enable mobile template" />
 
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_MOBILETEMPL"
-                    style="@style/item_checkbox"
-                    android:layout_column="0"
-                    android:text="Enable mobile template" />
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_REWRITEMODE"
+                style="@style/item_checkbox"
+                android:text="Rewrite mod" />
 
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_REWRITEMODE"
-                    style="@style/item_checkbox"
-                    android:layout_column="1"
-                    android:text="Rewrite mod" />
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_ENABLESSO"
+                style="@style/item_checkbox"
+                android:text="Enable SSO" />
 
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_ENABLESSO"
-                    style="@style/item_checkbox"
-                    android:layout_column="0"
-                    android:text="Enable SSO" />
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_SESSIONDB"
+                style="@style/item_checkbox"
+                android:text="Use session db" />
 
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_SESSIONDB"
-                    style="@style/item_checkbox"
-                    android:layout_column="1"
-                    android:text="Use session db" />
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_QMAIL"
+                style="@style/item_checkbox"
+                android:text="Enable Qmail" />
 
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_QMAIL"
-                    style="@style/item_checkbox"
-                    android:layout_column="0"
-                    android:text="Enable Qmail" />
-
-                <CheckBox
-                    android:id="@+id/GLOBALSETTINGS_CHECKBOX_HTMLDTD"
-                    style="@style/item_checkbox"
-                    android:layout_column="1"
-                    android:text="Enable HTML DTD" />
-            </GridLayout>
+            <CheckBox
+                android:id="@+id/GLOBALSETTINGS_CHECKBOX_HTMLDTD"
+                style="@style/item_checkbox"
+                android:text="Enable HTML DTD" />
         </LinearLayout>
     </ScrollView>
 

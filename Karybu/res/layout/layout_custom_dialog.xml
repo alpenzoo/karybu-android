@@ -27,21 +27,28 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/txt_dialog_message"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/lyt_dialog_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/txt_dialog_title"
         android:layout_below="@+id/txt_dialog_title"
         android:layout_marginTop="5dp"
-        android:text="Message" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txt_dialog_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Message" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/lyt_dialog_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/txt_dialog_message"
+        android:layout_below="@+id/lyt_dialog_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:orientation="horizontal"

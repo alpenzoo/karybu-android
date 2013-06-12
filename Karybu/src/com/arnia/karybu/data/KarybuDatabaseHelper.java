@@ -37,10 +37,10 @@ public class KarybuDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String sql;
-		sql = "CREATE TABLE "
-				+ KARYBU_SITES
-				+ "(_id integer auto increment,siteurl TEXT,username TEXT,password TEXT)";
+		String sql = String
+				.format("create table %s(%s integer primary key autoincrement, %s text, %s text, %s text)",
+						KARYBU_SITES, KARYBU_SITES_ID, KARYBU_SITES_SITEURL,
+						KARYBU_SITES_USERNAME, KARYBU_SITES_PASSWORD);
 		db.execSQL(sql);
 	}
 

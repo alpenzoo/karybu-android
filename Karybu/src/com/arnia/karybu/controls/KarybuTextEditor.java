@@ -1,10 +1,9 @@
 package com.arnia.karybu.controls;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextWatcher;
@@ -22,11 +21,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView.BufferType;
-import com.arnia.karybu.R;
-import com.arnia.karybu.KarybuFragment;
 
-public class KarybuTextEditor extends KarybuFragment implements OnClickListener,
-		TextWatcher {
+import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.R;
+
+public class KarybuTextEditor extends KarybuFragment implements
+		OnClickListener, TextWatcher {
 
 	// Editor control
 	private EditText txtContent;
@@ -57,13 +57,11 @@ public class KarybuTextEditor extends KarybuFragment implements OnClickListener,
 		btnBold.setOnClickListener(this);
 		btnItalic = (CheckBox) view.findViewById(R.id.EDITOR_ITALIC);
 		btnItalic.setOnClickListener(this);
-		btnUnderline = (CheckBox) view
-				.findViewById(R.id.EDITOR_UNDERLINE);
+		btnUnderline = (CheckBox) view.findViewById(R.id.EDITOR_UNDERLINE);
 		btnUnderline.setOnClickListener(this);
 		btnLink = (ImageButton) view.findViewById(R.id.EDITOR_LINK);
 		btnLink.setOnClickListener(this);
-		btnAddImage = (Button) view
-				.findViewById(R.id.EDITOR_ADD_IMAGE);
+		btnAddImage = (Button) view.findViewById(R.id.EDITOR_ADD_IMAGE);
 		btnAddImage.setOnClickListener(this);
 
 		return view;
@@ -281,9 +279,8 @@ public class KarybuTextEditor extends KarybuFragment implements OnClickListener,
 	private void linkClick() {
 		refreshSelectionPosition();
 
-		AlertDialog.Builder linkBox = new AlertDialog.Builder(getActivity());
-
-		linkBox.setTitle(getString(R.string.link));
+		final KarybuDialog dialog = new KarybuDialog(activity);
+		dialog.setTitle(R.string.link);
 
 		final LinearLayout layout = new LinearLayout(getActivity());
 		layout.setOrientation(LinearLayout.VERTICAL);
@@ -292,11 +289,15 @@ public class KarybuTextEditor extends KarybuFragment implements OnClickListener,
 		final EditText txtLinkText = new EditText(getActivity());
 		txtLinkText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT));
+		txtLinkText.setBackgroundResource(R.drawable.bg_edittext);
+		txtLinkText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
 		txtLinkText.setHint(getString(R.string.link_text));
 
 		final EditText txtLinkUrl = new EditText(getActivity());
 		txtLinkUrl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT));
+		txtLinkUrl.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+		txtLinkUrl.setBackgroundResource(R.drawable.bg_edittext);
 		txtLinkUrl.setHint(getString(R.string.link_url));
 
 		if (tmpSelectionStart < tmpSelectionEnd) {
@@ -308,26 +309,24 @@ public class KarybuTextEditor extends KarybuFragment implements OnClickListener,
 		layout.addView(txtLinkText);
 		layout.addView(txtLinkUrl);
 
-		linkBox.setView(layout);
-		linkBox.setPositiveButton(R.string.ok,
-				new DialogInterface.OnClickListener() {
+		dialog.setView(layout);
+		dialog.setPositiveButton(R.string.ok, new OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						txtContent.getText().replace(tmpSelectionStart,
-								tmpSelectionEnd, txtLinkText.getText());
-						tmpSelectionEnd = tmpSelectionStart
-								+ txtLinkText.getText().length();
-						String linkUrl = txtLinkUrl.getText().toString();
-						Spannable str = txtContent.getText();
-						str.setSpan(new URLSpan(linkUrl), tmpSelectionStart,
-								tmpSelectionEnd,
-								Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-					}
-				});
-		linkBox.setNegativeButton(R.string.cancel, null);
-		linkBox.show();
+			@Override
+			public void onClick(View v) {
+				txtContent.getText().replace(tmpSelectionStart,
+						tmpSelectionEnd, txtLinkText.getText());
+				tmpSelectionEnd = tmpSelectionStart
+						+ txtLinkText.getText().length();
+				String linkUrl = txtLinkUrl.getText().toString();
+				Spannable str = txtContent.getText();
+				str.setSpan(new URLSpan(linkUrl), tmpSelectionStart,
+						tmpSelectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				dialog.dismiss();
+			}
+		});
+		dialog.setNegativeButton(R.string.cancel);
+		dialog.show();
 	}
 
 	public String getContent() {

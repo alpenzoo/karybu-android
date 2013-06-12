@@ -23,7 +23,7 @@ import android.widget.EditText;
 
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuResponse;
-import com.arnia.karybu.controls.CustomDialog;
+import com.arnia.karybu.controls.KarybuDialog;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.google.android.gcm.GCMRegistrar;
 
@@ -58,19 +58,12 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 		// Validate input
 		if (websiteUrl.length() == 0 || username.length() == 0
 				|| password.length() == 0) {
-			final CustomDialog invalidInputDialog = new CustomDialog(
+			final KarybuDialog invalidInputDialog = new KarybuDialog(
 					LoginController.this);
 			invalidInputDialog.setIcon(R.drawable.ic_warning);
 			invalidInputDialog.setTitle(R.string.login_invalid_input_title);
 			invalidInputDialog.setMessage(R.string.login_invalid_input_msg);
-			invalidInputDialog.setPositiveButton(getString(R.string.close),
-					new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							invalidInputDialog.dismiss();
-						}
-					});
+			invalidInputDialog.setPositiveButton(getString(R.string.close));
 			invalidInputDialog.show();
 		} else {
 			websiteUrl = getURL(websiteUrl);
@@ -95,12 +88,12 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 
 		private String xmlData;
 		private boolean request_url_error = false;
-		private CustomDialog dialog;
+		private KarybuDialog dialog;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			dialog = new CustomDialog(LoginController.this);
+			dialog = new KarybuDialog(LoginController.this);
 			dialog.setTitle(R.string.checking_connection_dialog_title);
 			dialog.setMessage(R.string.checking_connection_dialog_description);
 			dialog.show();
@@ -189,14 +182,8 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 						return;
 					} else {
 						// Alert wrong password
-						dialog = new CustomDialog(LoginController.this);
-						dialog.setPositiveButton(getString(R.string.close),
-								new OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										dialog.dismiss();
-									}
-								});
+						dialog = new KarybuDialog(LoginController.this);
+						dialog.setPositiveButton(getString(R.string.close));
 						dialog.setIcon(R.drawable.ic_warning);
 						dialog.setTitle(R.string.wrong_password_dialog_title);
 						dialog.setMessage(R.string.wrong_password_dialog_description);
@@ -208,17 +195,11 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 				}
 			}
 
-			dialog = new CustomDialog(LoginController.this);
+			dialog = new KarybuDialog(LoginController.this);
 			dialog.setIcon(R.drawable.ic_warning);
 			dialog.setTitle(R.string.error);
 			dialog.setMessage(R.string.login_error_msg);
-			dialog.setPositiveButton(getString(R.string.close),
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
+			dialog.setPositiveButton(getString(R.string.close));
 			dialog.show();
 			return;
 		}

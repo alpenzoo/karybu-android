@@ -6,13 +6,12 @@ import java.io.StringReader;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,15 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuResponse;
+import com.arnia.karybu.controls.KarybuDialog;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.arnia.karybu.data.KarybuSite;
 
-public class SiteController extends KarybuFragment implements
-		OnClickListener {
+public class SiteController extends KarybuFragment implements OnClickListener {
 
 	private ListView lvwSite;
 	private SiteAdapter adapter;
@@ -42,18 +42,17 @@ public class SiteController extends KarybuFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View fragmentView = inflater.inflate(R.layout.layout_site,
-				container, false);
+		View fragmentView = inflater.inflate(R.layout.layout_site, container,
+				false);
 
-		lvwSite = (ListView) fragmentView
-				.findViewById(R.id.SITE_LISTVIEW);
-		KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper.getDBHelper(this.activity);
+		lvwSite = (ListView) fragmentView.findViewById(R.id.SITE_LISTVIEW);
+		KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper
+				.getDBHelper(this.activity);
 		adapter = new SiteAdapter(getActivity(), dbHelper.getAllSites());
 
 		lvwSite.setAdapter(adapter);
 
-		btnAdd = (Button) fragmentView
-				.findViewById(R.id.SITE_ADD_BUTTON);
+		btnAdd = (Button) fragmentView.findViewById(R.id.SITE_ADD_BUTTON);
 		btnAdd.setOnClickListener(this);
 
 		return fragmentView;
@@ -62,8 +61,9 @@ public class SiteController extends KarybuFragment implements
 	@Override
 	public void onClick(View v) {
 
-		Builder addBox = new Builder(getActivity());
-		addBox.setTitle("New Site");
+		final KarybuDialog dialog = new KarybuDialog(activity);
+		dialog.setTitle(R.string.new_website);
+
 		final LinearLayout layout = new LinearLayout(getActivity());
 		layout.setOrientation(LinearLayout.VERTICAL);
 		layout.setPadding(10, 0, 10, 0);
@@ -71,42 +71,49 @@ public class SiteController extends KarybuFragment implements
 		final EditText txtUrl = new EditText(getActivity());
 		txtUrl.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT));
-		txtUrl.setHint("URL");
+		txtUrl.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+		txtUrl.setBackgroundResource(R.drawable.bg_edittext);
+		txtUrl.setHint(R.string.login_hint_website_url);
 
 		final EditText txtUsername = new EditText(getActivity());
 		txtUsername.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT));
-		txtUsername.setHint("Username");
+		txtUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		txtUsername.setBackgroundResource(R.drawable.bg_edittext);
+		txtUsername.setHint(R.string.login_hint_username);
 
 		final EditText txtPassword = new EditText(getActivity());
 		txtPassword.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT));
+		txtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		txtPassword.setBackgroundResource(R.drawable.bg_edittext);
 		txtPassword.setTransformationMethod(PasswordTransformationMethod
 				.getInstance());
-		txtPassword.setHint("Password");
+		txtPassword.setHint(R.string.login_hint_password);
 
 		layout.addView(txtUrl);
 		layout.addView(txtUsername);
 		layout.addView(txtPassword);
 
-		addBox.setView(layout);
-		addBox.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		dialog.setView(layout);
+		dialog.setPositiveButton(R.string.ok, new OnClickListener() {
 
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(View v) {
 				String url = txtUrl.getText().toString().trim();
 				String username = txtUsername.getText().toString().trim();
 				String password = txtPassword.getText().toString().trim();
 				KarybuSite site = new KarybuSite(0, url, username, password);
-				LogInInBackground task = new LogInInBackground();
+				AddSiteBackground task = new AddSiteBackground();
 				task.execute(site);
+				dialog.dismiss();
 			}
 		});
-		addBox.show();
-
+		dialog.setNegativeButton(R.string.cancel);
+		dialog.show();
 	}
 
-	private class LogInInBackground extends AsyncTask<KarybuSite, Void, Void> {
+	private class AddSiteBackground extends AsyncTask<KarybuSite, Void, Void> {
 		String xmlData;
 		KarybuSite site;
 
@@ -135,9 +142,9 @@ public class SiteController extends KarybuFragment implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			return null;
-			
+
 		}
 
 		// verify the response after the request received a response
@@ -152,8 +159,8 @@ public class SiteController extends KarybuFragment implements
 				Serializer serializer = new Persister();
 
 				Reader reader = new StringReader(xmlData);
-				KarybuResponse response = serializer.read(KarybuResponse.class, reader,
-						false);
+				KarybuResponse response = serializer.read(KarybuResponse.class,
+						reader, false);
 
 				// check if the response was positive
 				if (response.value.equals("true")) {
@@ -165,7 +172,8 @@ public class SiteController extends KarybuFragment implements
 					Cursor cursor = db.rawQuery(
 							"SELECT count(*) countUrl FROM "
 									+ dbHelper.KARYBU_SITES + " WHERE "
-									+ dbHelper.KARYBU_SITES_SITEURL + "=?", args);
+									+ dbHelper.KARYBU_SITES_SITEURL + "=?",
+							args);
 					cursor.moveToFirst();
 					int urlCount = cursor.getInt(0);
 					cursor.close();
@@ -174,24 +182,27 @@ public class SiteController extends KarybuFragment implements
 						db = dbHelper.getWritableDatabase();
 						ContentValues values = new ContentValues();
 						values.put(dbHelper.KARYBU_SITES_SITEURL, site.siteUrl);
-						values.put(dbHelper.KARYBU_SITES_PASSWORD, site.password);
-						values.put(dbHelper.KARYBU_SITES_USERNAME, site.userName);
-						long affectedRows = db.insert(dbHelper.KARYBU_SITES, null,
-								values);
+						values.put(dbHelper.KARYBU_SITES_PASSWORD,
+								site.password);
+						values.put(dbHelper.KARYBU_SITES_USERNAME,
+								site.userName);
+						long affectedRows = db.insert(dbHelper.KARYBU_SITES,
+								null, values);
 						db.close();
 						Log.i("leapkh", "add logged site to database "
 								+ affectedRows);
 					}
 					adapter.addItem(site);
 				} else {
-					Toast toast = Toast.makeText(getActivity(),
+					Toast.makeText(getActivity(),
 							"Incorrect username or password!",
-							Toast.LENGTH_SHORT);
-					toast.show();
+							Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
-				Log.i("leapkh", "Add site error : " + e.getMessage());
 				e.printStackTrace();
+				Toast.makeText(getActivity(),
+						"Error while trying to add new website",
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 
