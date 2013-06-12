@@ -23,7 +23,7 @@ public class KarybuFragment extends Fragment {
 
 	public static void dismissProgress() {
 		progressDialogCount--;
-		if (progressDialogCount <= 0) {
+		if (progressDialogCount <= 0 && progress != null) {
 			progress.dismiss();
 			progressDialogCount = 0;
 		}

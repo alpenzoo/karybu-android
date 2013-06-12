@@ -4,10 +4,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,9 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.arnia.karybu.R;
 import com.arnia.karybu.KarybuFragment;
-import com.arnia.karybu.classes.KarybuArrayList;
+import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.controls.KarybuTextEditor;
@@ -32,42 +30,32 @@ public class TextyleAddPostController extends KarybuFragment implements
 	private KarybuTextEditor editor;
 	private Button btnSave;
 	private Button btnSaveAndPublish;
+	private MainActivityController mainActivity;
 
 	private View view;
-
-	// array with Textyles
-	private KarybuArrayList array;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.layout_textyle_new_post,
-				container, false);
+		mainActivity = (MainActivityController) activity;
 
-		etxtTitle = (EditText) view
-				.findViewById(R.id.ADD_POST_POST_TITLE);
+		view = inflater.inflate(R.layout.layout_textyle_new_post, container,
+				false);
+
+		etxtTitle = (EditText) view.findViewById(R.id.ADD_POST_POST_TITLE);
 		etxtUrl = (EditText) view.findViewById(R.id.ADD_POST_POST_URL);
 
 		editor = new KarybuTextEditor();
-		addNestedFragment(R.id.HTML_EDITOR, editor,
-				"add_post_html_editor");
+		addNestedFragment(R.id.HTML_EDITOR, editor, "add_post_html_editor");
 
-		btnSave = (Button) view
-				.findViewById(R.id.ADD_POST_SAVE_BUTTON);
+		btnSave = (Button) view.findViewById(R.id.ADD_POST_SAVE_BUTTON);
 		btnSave.setOnClickListener(this);
 		btnSaveAndPublish = (Button) view
 				.findViewById(R.id.ADD_POST_SAVE_AND_PUBLISH_BUTTON);
 		btnSaveAndPublish.setOnClickListener(this);
 
 		return view;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		GetTextylesAsyncTask task = new GetTextylesAsyncTask();
-		task.execute();
 	}
 
 	// asynctask for saving the post
@@ -85,7 +73,7 @@ public class TextyleAddPostController extends KarybuFragment implements
 			String xmlForSaving = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"
 					+ "<methodCall>\n<params>\n<act><![CDATA[procTextylePostsave]]></act>\n"
 					+ "<vid><![CDATA["
-					+ array.textyles.get(0).domain
+					+ mainActivity.getSelectedTextyle().domain
 					+ "]]></vid>\n"
 					+ "<publish><![CDATA[N]]></publish>\n"
 					+ "<_filter><![CDATA[save_post]]></_filter>\n"
@@ -136,7 +124,7 @@ public class TextyleAddPostController extends KarybuFragment implements
 			String xmlForSaving = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"
 					+ "<methodCall>\n<params>\n<act><![CDATA[procTextylePostsave]]></act>\n"
 					+ "<vid><![CDATA["
-					+ array.textyles.get(0).domain
+					+ mainActivity.getSelectedTextyle().domain
 					+ "]]></vid>\n"
 					+ "<publish><![CDATA[N]]></publish>\n"
 					+ "<_filter><![CDATA[save_post]]></_filter>\n"
@@ -178,7 +166,7 @@ public class TextyleAddPostController extends KarybuFragment implements
 					+ "]]></document_srl>\n"
 					+ "<mid><![CDATA[textyle]]></mid>\n"
 					+ "<vid><![CDATA["
-					+ array.textyles.get(0).domain
+					+ mainActivity.getSelectedTextyle().domain
 					+ "]]></vid>\n"
 					+ "<trackback_charset><![CDATA[UTF-8]]></trackback_charset>\n"
 					+ "<use_alias><![CDATA[N]]></use_alias>\n"
@@ -188,7 +176,8 @@ public class TextyleAddPostController extends KarybuFragment implements
 					+ "<module><![CDATA[textyle]]></module>\n"
 					+ "</params>\n</methodCall>";
 
-			KarybuHost.getINSTANCE().postRequest("/index.php", xmlForPublishing);
+			KarybuHost.getINSTANCE()
+					.postRequest("/index.php", xmlForPublishing);
 			return null;
 		}
 
@@ -262,50 +251,4 @@ public class TextyleAddPostController extends KarybuFragment implements
 
 		return url;
 	}
-
-	// Async Task for sending the request
-	private class GetTextylesAsyncTask extends
-			AsyncTask<Object, Object, Object> {
-		String response;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			KarybuFragment.startProgress(getActivity(), "Logging...");
-		}
-
-		@Override
-		protected Object doInBackground(Object... params) {
-			// sending the request
-			response = KarybuHost
-					.getINSTANCE()
-					.getRequest(
-							"/index.php?module=mobile_communication&act=procmobile_communicationTextyleList");
-
-			// parsing the response
-			Serializer serializer = new Persister();
-			Reader reader = new StringReader(response);
-			try {
-				array = serializer.read(KarybuArrayList.class, reader, false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		// called when the response came
-		@Override
-		protected void onPostExecute(Object result) {
-			super.onPostExecute(result);
-
-			dismissProgress();
-			if (array == null || array.textyles == null) {
-			} else {
-				Toast.makeText(getActivity(), R.string.no_textyle,
-						Toast.LENGTH_LONG).show();
-			}
-		}
-	}
-
 }

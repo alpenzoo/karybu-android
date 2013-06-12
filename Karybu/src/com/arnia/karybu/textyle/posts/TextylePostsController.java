@@ -22,9 +22,10 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPagination;
@@ -54,14 +55,11 @@ public class TextylePostsController extends KarybuFragment implements
 
 	private View fragmentView;
 
-	public void setSelectedTextyle(KarybuTextyle textyle) {
-		this.textyle = textyle;
-
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		textyle = ((MainActivityController) activity).getSelectedTextyle();
 
 		fragmentView = inflater.inflate(R.layout.layout_textyle_posts,
 				container, false);
@@ -92,7 +90,8 @@ public class TextylePostsController extends KarybuFragment implements
 		return fragmentView;
 	}
 
-	public void refreshContent() {
+	public void onTextyleChange() {
+		textyle = ((MainActivityController) activity).getSelectedTextyle();
 		postsArray = new KarybuArrayList[4];
 		isTaskLoading = new boolean[4];
 		adapter.clearData();
@@ -156,8 +155,8 @@ public class TextylePostsController extends KarybuFragment implements
 
 			Reader reader = new StringReader(response);
 			try {
-				KarybuArrayList tmpPosts = serializer.read(KarybuArrayList.class,
-						reader, false);
+				KarybuArrayList tmpPosts = serializer.read(
+						KarybuArrayList.class, reader, false);
 				return tmpPosts;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -199,8 +198,8 @@ public class TextylePostsController extends KarybuFragment implements
 
 		TextyleEditPostContentController editPostContentController = new TextyleEditPostContentController();
 
-		KarybuTextylePost post = (KarybuTextylePost) parent.getAdapter().getItem(
-				position);
+		KarybuTextylePost post = (KarybuTextylePost) parent.getAdapter()
+				.getItem(position);
 
 		Bundle args = new Bundle();
 		args.putSerializable("textyle", textyle);

@@ -8,13 +8,10 @@ import org.simpleframework.xml.core.Persister;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,9 +70,10 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 	}
 
 	private String getURL(String url) {
-		if (!url.contains("http://")) {
+		if (!url.contains("http://"))
 			url = "http://" + url;
-		}
+		if (url.substring(url.length() - 1).equals("/"))
+			url = url.substring(0, url.length() - 1);
 		return url;
 	}
 
@@ -167,13 +165,6 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 							db.close();
 						}
 
-						// Add site id to default shared preference
-						SharedPreferences pref = PreferenceManager
-								.getDefaultSharedPreferences(getApplication());
-						Editor prefEditor = pref.edit();
-						prefEditor.putString("ACTIVE_SITE", websiteUrl);
-						prefEditor.commit();
-
 						// call dash board activity
 						Intent callDashboard = new Intent(LoginController.this,
 								MainActivityController.class);
@@ -183,10 +174,10 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 					} else {
 						// Alert wrong password
 						dialog = new KarybuDialog(LoginController.this);
-						dialog.setPositiveButton(getString(R.string.close));
 						dialog.setIcon(R.drawable.ic_warning);
 						dialog.setTitle(R.string.wrong_password_dialog_title);
 						dialog.setMessage(R.string.wrong_password_dialog_description);
+						dialog.setPositiveButton(getString(R.string.close));
 						dialog.show();
 						return;
 					}

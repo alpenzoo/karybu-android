@@ -37,18 +37,20 @@ public class TextyleCommentsController extends KarybuFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		textyle = ((MainActivityController) activity).getSelectedTextyle();
+
 		View view = inflater.inflate(R.layout.layout_textyle_comments,
 				container, false);
-		listView = (ListView) view
-				.findViewById(R.id.TEXTYLE_COMMENTS_LISTVIEW);
+		listView = (ListView) view.findViewById(R.id.TEXTYLE_COMMENTS_LISTVIEW);
 		adapter = new TextyleCommentsAdapter(this);
 		listView.setAdapter(adapter);
 
 		return view;
 	}
 
-	public void setTextyle(KarybuTextyle textyle) {
-		this.textyle = textyle;
+	public void onTextyleChange() {
+		textyle = ((MainActivityController) activity).getSelectedTextyle();
 		refreshComment();
 	}
 
@@ -194,14 +196,15 @@ public class TextyleCommentsController extends KarybuFragment implements
 					+ "]]></vid>\n</params>\n</methodCall>";
 
 			// send the request
-			String response = KarybuHost.getINSTANCE().postRequest("/index.php",
-					xml);
+			String response = KarybuHost.getINSTANCE().postRequest(
+					"/index.php", xml);
 
 			// parse the response
 			Serializer serializer = new Persister();
 			Reader reader = new StringReader(response);
 			try {
-				confirmation = serializer.read(KarybuResponse.class, reader, false);
+				confirmation = serializer.read(KarybuResponse.class, reader,
+						false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

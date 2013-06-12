@@ -1,10 +1,17 @@
 package com.arnia.karybu;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,21 +19,40 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.arnia.karybu.R;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.BaseAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.arnia.karybu.classes.KarybuArrayList;
+import com.arnia.karybu.classes.KarybuHost;
+import com.arnia.karybu.classes.KarybuTextyle;
+import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.arnia.karybu.data.KarybuSite;
 import com.arnia.karybu.sites.SiteController;
+import com.arnia.karybu.textyle.comments.TextyleCommentsController;
+import com.arnia.karybu.textyle.posts.TextylePostsController;
 
 public class MainActivityController extends FragmentActivity implements
-		OnPageChangeListener {
+		OnPageChangeListener, OnItemSelectedListener {
 
 	private ViewPager pager;
 	private PageAdapter pageAdapter;
 	private int prevPageIndex;
-	private KarybuSite selectingSite;
 	private ActionBar actionBar;
 
+	private Spinner selectSiteSpinner;
+	private ArrayList<KarybuSite> sites;
+	private SiteAdapter siteAdapter;
+	private KarybuSite selectingSite;
+
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,6 +71,20 @@ public class MainActivityController extends FragmentActivity implements
 		pager.setAdapter(pageAdapter);
 		pageAdapter.addFragment(new DashboardController());
 		pager.setOnPageChangeListener(this);
+
+		KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper.getDBHelper(this);
+		sites = dbHelper.getAllSites();
+
+		LoadAllTextylesInBackground task = new LoadAllTextylesInBackground();
+		task.execute(sites);
+
+		selectSiteSpinner = (Spinner) actionBar.getCustomView().findViewById(
+				R.id.MENU_SELECT_SITE);
+
+		siteAdapter = new SiteAdapter();
+		selectSiteSpinner.setAdapter(siteAdapter);
+		selectSiteSpinner.setOnItemSelectedListener(this);
+
 	}
 
 	@Override
@@ -53,8 +93,25 @@ public class MainActivityController extends FragmentActivity implements
 		return true;
 	}
 
-	public void setSelectingSite(KarybuSite site) {
-		selectingSite = site;
+	public KarybuSite getSelectedSite() {
+		return selectingSite;
+	}
+
+	public KarybuTextyle getSelectedTextyle() {
+		if (selectSiteSpinner.getSelectedItem().getClass() == KarybuSite.class) {
+			int textyleIndex = selectSiteSpinner.getSelectedItemPosition() + 1;
+			if (textyleIndex >= siteAdapter.getCount())
+				return new KarybuTextyle();
+			else {
+				KarybuTextyle textyle = (KarybuTextyle) siteAdapter
+						.getItem(textyleIndex);
+				return textyle;
+			}
+		} else {
+			KarybuTextyle textyle = (KarybuTextyle) selectSiteSpinner
+					.getSelectedItem();
+			return textyle;
+		}
 	}
 
 	public void requestToBrowser() {
@@ -166,4 +223,188 @@ public class MainActivityController extends FragmentActivity implements
 			super.onBackPressed();
 		}
 	}
+
+	public class SiteAdapter extends BaseAdapter {
+		private ArrayList<Object> data;
+
+		public SiteAdapter() {
+			data = new ArrayList<Object>();
+		}
+
+		public void setData(ArrayList<Object> data) {
+			this.data = data;
+		}
+
+		public ArrayList<Object> getData() {
+			return data;
+		}
+
+		@Override
+		public int getCount() {
+			return data.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return data.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public int getPositionOfItem(Object item) {
+			return data.indexOf(item);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			if (convertView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = layoutInflater.inflate(
+						R.layout.layout_site_spinner_item, null);
+			}
+			TextView textRow = (TextView) convertView
+					.findViewById(R.id.SITE_SPINNER_ITEM);
+			textRow.setTag(position);
+			Object obj = data.get(position);
+			if (obj.getClass() == KarybuTextyle.class) {
+				textRow.setText(((KarybuTextyle) obj).textyle_title);
+			} else {
+				textRow.setText(obj.toString());
+			}
+			return convertView;
+		}
+	}
+
+	// AsyncTask for LogIn
+	private class LogInInBackground extends
+			AsyncTask<KarybuSite, Void, Boolean> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(MainActivityController.this,
+					getString(R.string.logging));
+		}
+
+		// send the request in background
+
+		@Override
+		protected synchronized Boolean doInBackground(KarybuSite... params) {
+			KarybuSite site = params[0];
+			String url = site.siteUrl;
+			String userid = site.userName;
+			String password = site.password;
+			try {
+				KarybuHost.getINSTANCE().setURL(url);
+				KarybuHost
+						.getINSTANCE()
+						.getRequest(
+								"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
+										+ userid + "&password=" + password);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+		}
+	}
+
+	private class LoadAllTextylesInBackground extends
+			AsyncTask<ArrayList<KarybuSite>, Void, ArrayList<Object>> {
+
+		private ArrayList<Object> sitesAndTextyles;
+		private ArrayList<KarybuSite> sites;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(MainActivityController.this,
+					getString(R.string.loading));
+		}
+
+		@Override
+		protected synchronized ArrayList<Object> doInBackground(
+				ArrayList<KarybuSite>... params) {
+			sites = params[0];
+			sitesAndTextyles = new ArrayList<Object>();
+			for (KarybuSite site : sites) {
+				try {
+					String url = site.siteUrl;
+					String userid = site.userName;
+					String password = site.password;
+
+					KarybuHost.getINSTANCE().setURL(url);
+
+					KarybuHost
+							.getINSTANCE()
+							.getRequest(
+									"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
+											+ userid + "&password=" + password);
+
+					String response = KarybuHost
+							.getINSTANCE()
+							.getRequest(
+									"/index.php?module=mobile_communication&act=procmobile_communicationTextyleList");
+
+					// parsing the response
+					Serializer serializer = new Persister();
+					Reader reader = new StringReader(response);
+					KarybuArrayList array = serializer.read(
+							KarybuArrayList.class, reader, false);
+					sitesAndTextyles.add(site);
+					if (array != null && array.textyles != null)
+						sitesAndTextyles.addAll(array.textyles);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			return sitesAndTextyles;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Object> result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+			siteAdapter.setData(result);
+			siteAdapter.notifyDataSetChanged();
+		}
+
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+			long id) {
+		Object selectedItem = parent.getItemAtPosition(position);
+		if (selectedItem.getClass() == KarybuSite.class) {
+			selectingSite = (KarybuSite) selectedItem;
+			new LogInInBackground().execute((KarybuSite) selectedItem);
+		} else {
+			Fragment currentDisplayFragment = getCurrentDisplayedFragment();
+			if (currentDisplayFragment.getClass() == TextylePostsController.class) {
+				TextylePostsController currentPostController = (TextylePostsController) currentDisplayFragment;
+				currentPostController.onTextyleChange();
+			} else if (currentDisplayFragment.getClass() == TextyleCommentsController.class) {
+				TextyleCommentsController currentPostController = (TextyleCommentsController) currentDisplayFragment;
+				currentPostController.onTextyleChange();
+			}
+
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+	}
+
 }
