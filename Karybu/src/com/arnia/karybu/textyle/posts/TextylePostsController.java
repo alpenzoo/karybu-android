@@ -10,6 +10,7 @@ import org.simpleframework.xml.core.Persister;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,12 +91,16 @@ public class TextylePostsController extends KarybuFragment implements
 		return fragmentView;
 	}
 
-	public void onTextyleChange() {
-		textyle = ((MainActivityController) activity).getSelectedTextyle();
+	@Override
+	protected void onSelectedTextyle(KarybuTextyle textyle) {
+		super.onSelectedTextyle(textyle);
+		Log.i("leapkh", "[TextylePostController]onSelectedTextyle");
+		this.textyle = textyle;
 		postsArray = new KarybuArrayList[4];
 		isTaskLoading = new boolean[4];
 		adapter.clearData();
-		onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
+		if (textyle != null)
+			onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
 	}
 
 	private class GetPostsAsycTask extends
@@ -186,6 +191,7 @@ public class TextylePostsController extends KarybuFragment implements
 					// listViewFotter.setVisibility(View.GONE);
 					listView.removeFooterView(listViewFotter);
 			}
+			adapter.notifyDataSetChanged();
 			listViewFotter.setVisibility(View.INVISIBLE);
 		}
 	}

@@ -51,6 +51,7 @@
     <string name="body">Body</string>
     <string name="save_and_publish">Save and publish</string>
     <string name="save">Save</string>
+    <string name="msg_there_is_no_textyle_in_this_site">There is no textyle in this site.</string>
 
     <!-- Edit post layout -->
     <string name="delete_post">Delete</string>

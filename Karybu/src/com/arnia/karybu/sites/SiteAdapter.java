@@ -239,7 +239,6 @@ public class SiteAdapter extends BaseAdapter {
 						reader, false);
 
 				// check if the response was positive
-				Log.i("leapkh", "Response: " + response.value);
 				if (response.value.equals("true")) {
 					// Write site data to database
 					KarybuDatabaseHelper dbHelper = KarybuDatabaseHelper

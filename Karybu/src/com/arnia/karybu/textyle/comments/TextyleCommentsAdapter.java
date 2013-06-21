@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuComment;
 
 //Adapter for the listView with KarybuComments
@@ -103,8 +104,7 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context.getActivity()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(
-					R.layout.cellview_commentitem, null);
+			convertView = inflater.inflate(R.layout.cellview_commentitem, null);
 		}
 
 		TextView nickname = (TextView) convertView
@@ -143,4 +143,12 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+
+	public void clearData() {
+		comments = new ArrayList<KarybuComment>();
+		arrayWithReplies = new ArrayList<KarybuComment>();
+		arrayWithComments = new ArrayList<KarybuComment>();
+		notifyDataSetChanged();
+	}
+
 }

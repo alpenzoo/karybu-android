@@ -8,6 +8,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.model.TimeSeries;
@@ -18,6 +19,7 @@ import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine;
 import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine.Type;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuDayStats;
 import com.arnia.karybu.classes.KarybuHost;
@@ -73,11 +76,13 @@ public class StatisticsController extends KarybuFragment implements
 		btnArrowRight.setOnClickListener(this);
 		btnArrowRight.setEnabled(false);
 
-		GetStatisticsAsyncTask task = new GetStatisticsAsyncTask();
-		task.execute();
-
 		return view;
 
+	}
+
+	public void refreshStatistic() {
+		GetStatisticsAsyncTask task = new GetStatisticsAsyncTask();
+		task.execute();
 	}
 
 	@Override
@@ -267,6 +272,7 @@ public class StatisticsController extends KarybuFragment implements
 
 			LinearLayout lytStatistic = (LinearLayout) view
 					.findViewById(R.id.lyt_visitor_statistic);
+			lytStatistic.removeAllViews();
 			lytStatistic.addView(graphicalView);
 		}
 
@@ -319,5 +325,4 @@ public class StatisticsController extends KarybuFragment implements
 
 		btnArrowLeft.setEnabled(true);
 	}
-
 }

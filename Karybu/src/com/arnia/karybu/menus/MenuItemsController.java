@@ -50,7 +50,7 @@ public class MenuItemsController extends KarybuFragment {
 			@Override
 			public void onClick(View v) {
 				MainActivityController mainActivity = (MainActivityController) activity;
-				Fragment screen = new AddMenuItemController();
+				KarybuFragment screen = new AddMenuItemController();
 				Bundle args = new Bundle();
 				args.putString("menu_srl", menuSRL);
 				args.putString("menu_parent_srl", menuItemParentSRL);

@@ -26,10 +26,7 @@ public class StartupController extends KarybuActivity {
 		cursor.close();
 		db.close();
 		if (recordCount > 0) {
-			Intent callDashboard = new Intent(this,
-					MainActivityController.class);
-			startActivity(callDashboard);
-
+			startActivity(new Intent(this, MainActivityController.class));
 		} else {
 			Intent callAddNewSite = new Intent(this,
 					WelcomeScreenController.class);

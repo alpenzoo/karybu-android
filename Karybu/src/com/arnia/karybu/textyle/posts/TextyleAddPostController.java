@@ -196,14 +196,28 @@ public class TextyleAddPostController extends KarybuFragment implements
 		switch (v.getId()) {
 		case R.id.ADD_POST_SAVE_BUTTON:
 			if (validateInput()) {
-				SavePostAsyncTask saveTask = new SavePostAsyncTask();
-				saveTask.execute();
+				if (mainActivity.getSelectedTextyle() == null) {
+					Toast.makeText(
+							activity,
+							getString(R.string.msg_there_is_no_textyle_in_this_site),
+							Toast.LENGTH_LONG).show();
+				} else {
+					SavePostAsyncTask saveTask = new SavePostAsyncTask();
+					saveTask.execute();
+				}
 			}
 			break;
 		case R.id.ADD_POST_SAVE_AND_PUBLISH_BUTTON:
 			if (validateInput()) {
-				PublishPostAsyncTask publishTask = new PublishPostAsyncTask();
-				publishTask.execute();
+				if (mainActivity.getSelectedTextyle() == null) {
+					Toast.makeText(
+							activity,
+							getString(R.string.msg_there_is_no_textyle_in_this_site),
+							Toast.LENGTH_LONG).show();
+				} else {
+					PublishPostAsyncTask publishTask = new PublishPostAsyncTask();
+					publishTask.execute();
+				}
 			}
 			break;
 		}

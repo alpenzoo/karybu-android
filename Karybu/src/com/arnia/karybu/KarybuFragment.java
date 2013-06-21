@@ -1,5 +1,8 @@
 package com.arnia.karybu;
 
+import com.arnia.karybu.classes.KarybuTextyle;
+import com.arnia.karybu.data.KarybuSite;
+
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -42,4 +45,13 @@ public class KarybuFragment extends Fragment {
 		fragmentManager.beginTransaction()
 				.add(layoutID, fragment, fragmentName).commit();
 	}
+
+	protected void onSelectedSite(KarybuSite site) {
+
+	}
+
+	protected void onSelectedTextyle(KarybuTextyle textyle) {
+
+	}
+
 }

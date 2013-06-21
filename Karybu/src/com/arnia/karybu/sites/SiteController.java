@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -186,11 +185,8 @@ public class SiteController extends KarybuFragment implements OnClickListener {
 								site.password);
 						values.put(dbHelper.KARYBU_SITES_USERNAME,
 								site.userName);
-						long affectedRows = db.insert(dbHelper.KARYBU_SITES,
-								null, values);
+						db.insert(dbHelper.KARYBU_SITES, null, values);
 						db.close();
-						Log.i("leapkh", "add logged site to database "
-								+ affectedRows);
 					}
 					adapter.addItem(site);
 				} else {

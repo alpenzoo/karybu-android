@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -36,8 +35,6 @@ import com.arnia.karybu.classes.KarybuTextyle;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.arnia.karybu.data.KarybuSite;
 import com.arnia.karybu.sites.SiteController;
-import com.arnia.karybu.textyle.comments.TextyleCommentsController;
-import com.arnia.karybu.textyle.posts.TextylePostsController;
 
 public class MainActivityController extends FragmentActivity implements
 		OnPageChangeListener, OnItemSelectedListener {
@@ -50,7 +47,7 @@ public class MainActivityController extends FragmentActivity implements
 	private Spinner selectSiteSpinner;
 	private ArrayList<KarybuSite> sites;
 	private SiteAdapter siteAdapter;
-	private KarybuSite selectingSite;
+	private KarybuSite selectedSite;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -94,18 +91,20 @@ public class MainActivityController extends FragmentActivity implements
 	}
 
 	public KarybuSite getSelectedSite() {
-		return selectingSite;
+		return selectedSite;
 	}
 
 	public KarybuTextyle getSelectedTextyle() {
 		if (selectSiteSpinner.getSelectedItem().getClass() == KarybuSite.class) {
 			int textyleIndex = selectSiteSpinner.getSelectedItemPosition() + 1;
 			if (textyleIndex >= siteAdapter.getCount())
-				return new KarybuTextyle();
+				return null;
 			else {
-				KarybuTextyle textyle = (KarybuTextyle) siteAdapter
-						.getItem(textyleIndex);
-				return textyle;
+				Object obj = siteAdapter.getItem(textyleIndex);
+				if (obj.getClass() == KarybuTextyle.class)
+					return (KarybuTextyle) obj;
+				else
+					return null;
 			}
 		} else {
 			KarybuTextyle textyle = (KarybuTextyle) selectSiteSpinner
@@ -115,9 +114,9 @@ public class MainActivityController extends FragmentActivity implements
 	}
 
 	public void requestToBrowser() {
-		if (selectingSite != null) {
+		if (selectedSite != null) {
 			Intent browser = new Intent(Intent.ACTION_VIEW,
-					Uri.parse(selectingSite.siteUrl));
+					Uri.parse(selectedSite.siteUrl));
 			this.startActivity(browser);
 		}
 	}
@@ -145,11 +144,11 @@ public class MainActivityController extends FragmentActivity implements
 		return true;
 	}
 
-	public Fragment getCurrentDisplayedFragment() {
+	public KarybuFragment getCurrentDisplayedFragment() {
 		return this.pageAdapter.getItem(this.pager.getCurrentItem());
 	}
 
-	public void addMoreScreen(Fragment screen) {
+	public void addMoreScreen(KarybuFragment screen) {
 		pageAdapter.addFragment(screen);
 		pager.setCurrentItem(pageAdapter.getCount() - 1, true);
 	}
@@ -161,20 +160,20 @@ public class MainActivityController extends FragmentActivity implements
 
 	private class PageAdapter extends FragmentStatePagerAdapter {
 
-		ArrayList<Fragment> screenStack;
+		ArrayList<KarybuFragment> screenStack;
 
 		public PageAdapter(FragmentManager fm) {
 			super(fm);
-			screenStack = new ArrayList<Fragment>();
+			screenStack = new ArrayList<KarybuFragment>();
 		}
 
 		@Override
-		public Fragment getItem(int position) {
+		public KarybuFragment getItem(int position) {
 			return screenStack.get(position);
 
 		}
 
-		public void addFragment(Fragment screen) {
+		public void addFragment(KarybuFragment screen) {
 			screenStack.add(screen);
 			this.notifyDataSetChanged();
 
@@ -195,13 +194,11 @@ public class MainActivityController extends FragmentActivity implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -283,6 +280,8 @@ public class MainActivityController extends FragmentActivity implements
 	private class LogInInBackground extends
 			AsyncTask<KarybuSite, Void, Boolean> {
 
+		protected KarybuSite site;
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -294,7 +293,7 @@ public class MainActivityController extends FragmentActivity implements
 
 		@Override
 		protected synchronized Boolean doInBackground(KarybuSite... params) {
-			KarybuSite site = params[0];
+			site = params[0];
 			String url = site.siteUrl;
 			String userid = site.userName;
 			String password = site.password;
@@ -338,6 +337,7 @@ public class MainActivityController extends FragmentActivity implements
 			sites = params[0];
 			sitesAndTextyles = new ArrayList<Object>();
 			for (KarybuSite site : sites) {
+				sitesAndTextyles.add(site);
 				try {
 					String url = site.siteUrl;
 					String userid = site.userName;
@@ -361,7 +361,6 @@ public class MainActivityController extends FragmentActivity implements
 					Reader reader = new StringReader(response);
 					KarybuArrayList array = serializer.read(
 							KarybuArrayList.class, reader, false);
-					sitesAndTextyles.add(site);
 					if (array != null && array.textyles != null)
 						sitesAndTextyles.addAll(array.textyles);
 
@@ -386,25 +385,67 @@ public class MainActivityController extends FragmentActivity implements
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
+
 		Object selectedItem = parent.getItemAtPosition(position);
 		if (selectedItem.getClass() == KarybuSite.class) {
-			selectingSite = (KarybuSite) selectedItem;
-			new LogInInBackground().execute((KarybuSite) selectedItem);
-		} else {
-			Fragment currentDisplayFragment = getCurrentDisplayedFragment();
-			if (currentDisplayFragment.getClass() == TextylePostsController.class) {
-				TextylePostsController currentPostController = (TextylePostsController) currentDisplayFragment;
-				currentPostController.onTextyleChange();
-			} else if (currentDisplayFragment.getClass() == TextyleCommentsController.class) {
-				TextyleCommentsController currentPostController = (TextyleCommentsController) currentDisplayFragment;
-				currentPostController.onTextyleChange();
+			KarybuSite site = (KarybuSite) selectedItem;
+			if (site != selectedSite) {
+				// Log.i("TAG","[MaintActivity]Change from site to site");
+				selectedSite = (KarybuSite) selectedItem;
+				new LogInInBackground() {
+					@Override
+					protected void onPostExecute(Boolean result) {
+						super.onPostExecute(result);
+						KarybuFragment.dismissProgress();
+						KarybuFragment currentScreen = getCurrentDisplayedFragment();
+						currentScreen.onSelectedSite(site);
+						KarybuTextyle textyle = getSelectedTextyle();
+						currentScreen.onSelectedTextyle(textyle);
+					}
+				}.execute((KarybuSite) selectedItem);
+			} else {
+				// Log.i("TAG","[MaintActivity]Change from textyle to site");
+				KarybuFragment currentScreen = getCurrentDisplayedFragment();
+				KarybuTextyle textyle = getSelectedTextyle();
+				currentScreen.onSelectedTextyle(textyle);
 			}
-
+		} else {
+			KarybuTextyle textyle = (KarybuTextyle) selectedItem;
+			KarybuSite site = getSiteByTextyle(textyle, position);
+			if (site != selectedSite) {
+				selectedSite = site;
+				// Log.i("TAG","[MaintActivity]Change from textyle to site of another site");
+				new LogInInBackground() {
+					@Override
+					protected void onPostExecute(Boolean result) {
+						super.onPostExecute(result);
+						KarybuFragment.dismissProgress();
+						KarybuFragment currentScreen = getCurrentDisplayedFragment();
+						KarybuTextyle textyle = getSelectedTextyle();
+						currentScreen.onSelectedTextyle(textyle);
+					}
+				}.execute(selectedSite);
+			} else {
+				// Log.i("TAG","[MaintActivity]Change from textyle to textyle in current site");
+				KarybuFragment currentScreen = getCurrentDisplayedFragment();
+				currentScreen.onSelectedTextyle(textyle);
+			}
 		}
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
+	}
+
+	private KarybuSite getSiteByTextyle(KarybuTextyle textyle, int itemIndex) {
+		ArrayList<Object> sitesAndTextyles = siteAdapter.getData();
+		for (int i = (itemIndex - 1); i >= 0; i--) {
+			Object item = sitesAndTextyles.get(i);
+			if (item.getClass() == KarybuSite.class) {
+				return (KarybuSite) item;
+			}
+		}
+		return null;
 	}
 
 }

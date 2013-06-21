@@ -14,10 +14,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuComment;
 import com.arnia.karybu.classes.KarybuHost;
@@ -49,15 +49,19 @@ public class TextyleCommentsController extends KarybuFragment implements
 		return view;
 	}
 
-	public void onTextyleChange() {
-		textyle = ((MainActivityController) activity).getSelectedTextyle();
+	@Override
+	protected void onSelectedTextyle(KarybuTextyle textyle) {
+		super.onSelectedTextyle(textyle);
+		this.textyle = textyle;
 		refreshComment();
 	}
 
 	private void refreshComment() {
-		// send request to get the comments
-		GetCommentsAsyncTask task = new GetCommentsAsyncTask();
-		task.execute();
+		adapter.clearData();
+		if (textyle != null) {
+			GetCommentsAsyncTask task = new GetCommentsAsyncTask();
+			task.execute();
+		}
 	}
 
 	@Override
@@ -98,16 +102,8 @@ public class TextyleCommentsController extends KarybuFragment implements
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
 
-			// check if the user is logged in
-			if (array.comments == null) {
-				Toast toast = Toast.makeText(activity, "No comments!",
-						Toast.LENGTH_SHORT);
-				toast.show();
-			}
-
 			adapter.setComments(array.comments);
 			adapter.notifyDataSetChanged();
-			// }
 
 		}
 	}
