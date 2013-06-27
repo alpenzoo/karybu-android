@@ -94,6 +94,7 @@
     <string name="error">Error</string>
     <string name="loading">Loading&#8230;</string>
     <string name="logging">Logging&#8230;</string>
+    <string name="processing">Processing&#8230;</string>
 
     <!-- Actionbar -->
     <string name="actionbar_back">&lt;</string>
@@ -113,4 +114,9 @@
     <string name="new_menu">New Menu</string>
     <string name="menu_name">Menu name</string>
 
+    <!-- Comment -->
+    <string name="no_new_comment">No new comments</string>
+    <string name="new_comment_count">%s NEW</string>
+
+    <!-- Quick setting --><string name="msg_save_setting_success">Settings have been saved.</string>
 </resources>
