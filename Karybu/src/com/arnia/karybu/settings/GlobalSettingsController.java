@@ -1,4 +1,4 @@
-package com.arnia.karybu.global_settings;
+package com.arnia.karybu.settings;
 
 import java.io.Reader;
 import java.io.Serializable;
@@ -27,9 +27,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.arnia.karybu.R;
+import android.widget.Toast;
+
 import com.arnia.karybu.KarybuFragment;
-import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuGlobalSettings;
 import com.arnia.karybu.classes.KarybuHost;
 
@@ -55,8 +56,8 @@ public class GlobalSettingsController extends KarybuFragment implements
 	private KarybuGlobalSettings settings;
 
 	protected String[] languages = { "English", "한국어", "日本語", "中文(中国)",
-			"中文(臺�?�)", "Francais", "Deutsch", "Ру�?�?кий", "Español", "Türkçe",
-			"Tiếng Việt", "Mongolian" };
+			"中文(臺�?�)", "Francais", "Deutsch", "Ру�?�?кий", "Español",
+			"Türkçe", "Tiếng Việt", "Mongolian" };
 	protected ArrayList<String> selectedLanguages = new ArrayList<String>();
 
 	@Override
@@ -95,8 +96,7 @@ public class GlobalSettingsController extends KarybuFragment implements
 				.findViewById(R.id.GLOBALSETTINGS_CHECKBOX_QMAIL);
 		htmlDTDCheckBox = (CheckBox) view
 				.findViewById(R.id.GLOBALSETTINGS_CHECKBOX_HTMLDTD);
-		saveButton = (Button) view
-				.findViewById(R.id.GLOBALSETTINGS_SAVEBUTTON);
+		saveButton = (Button) view.findViewById(R.id.GLOBALSETTINGS_SAVEBUTTON);
 		saveButton.setOnClickListener(this);
 
 		startProgress(activity, "Loading settings");
@@ -150,6 +150,7 @@ public class GlobalSettingsController extends KarybuFragment implements
 		builder.setTitle("Select Languages");
 		builder.setMultiChoiceItems(languages, checkedLanguage,
 				languagesDialogListener);
+		builder.setPositiveButton(getString(R.string.close), null);
 
 		AlertDialog dialog = builder.create();
 		dialog.show();
@@ -240,7 +241,7 @@ public class GlobalSettingsController extends KarybuFragment implements
 	}
 
 	public void setMobileTemplateOption() {
-		if (settings.mobile.equals("Y"))
+		if (settings.mobile != null && settings.mobile.equals("Y"))
 			mobileTemplateCheckBox.setChecked(true);
 		else
 			mobileTemplateCheckBox.setChecked(false);
@@ -441,7 +442,9 @@ public class GlobalSettingsController extends KarybuFragment implements
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			dismissProgress();
-			((MainActivityController) activity).backwardScreen();
+			Toast.makeText(activity,
+					getString(R.string.msg_save_setting_success),
+					Toast.LENGTH_LONG).show();
 		}
 
 	}

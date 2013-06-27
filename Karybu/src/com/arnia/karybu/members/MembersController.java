@@ -22,6 +22,7 @@ import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMember;
+import com.arnia.karybu.data.KarybuSite;
 
 //Activity that has a list of members
 public class MembersController extends KarybuFragment implements
@@ -38,8 +39,7 @@ public class MembersController extends KarybuFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.layout_members, container,
-				false);
+		View view = inflater.inflate(R.layout.layout_members, container, false);
 
 		listView = (ListView) view.findViewById(R.id.MEMBERS_LISTVIEW);
 		//
@@ -52,18 +52,13 @@ public class MembersController extends KarybuFragment implements
 
 		listView.setOnItemClickListener(this);
 
-		return view;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
 		startProgress(activity, "Loading...");
 
 		// send the request to get the members
 		GetMembersAsync asyncRequest = new GetMembersAsync();
 		asyncRequest.execute();
+
+		return view;
 	}
 
 	// called when an item in listView is pressed
@@ -75,8 +70,7 @@ public class MembersController extends KarybuFragment implements
 		Bundle args = new Bundle();
 		args.putSerializable("member", member);
 		editMemberController.setArguments(args);
-		((MainActivityController) activity)
-				.addMoreScreen(editMemberController);
+		((MainActivityController) activity).addMoreScreen(editMemberController);
 	}
 
 	// AsyncTask to get all members
@@ -97,8 +91,8 @@ public class MembersController extends KarybuFragment implements
 
 			Reader reader = new StringReader(xmlData);
 			try {
-				arrayWithMembers = serializer.read(KarybuArrayList.class, reader,
-						false);
+				arrayWithMembers = serializer.read(KarybuArrayList.class,
+						reader, false);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -114,17 +108,26 @@ public class MembersController extends KarybuFragment implements
 			// dismiss the loading message
 			dismissProgress();
 
+			// clear adapter
+			adapter.clear();
+
 			// add members in adapter
 			if (arrayWithMembers.members != null) {
-				// clear adapter
-				adapter.clear();
 				for (int i = 0; i < arrayWithMembers.members.size(); i++) {
 					adapter.add(arrayWithMembers.members.get(i));
 				}
-				adapter.notifyDataSetChanged();
 			}
+			adapter.notifyDataSetChanged();
 		}
 
+	}
+
+	@Override
+	protected void onSelectedSite(KarybuSite site) {
+		super.onSelectedSite(site);
+		// send the request to get the members
+		GetMembersAsync asyncRequest = new GetMembersAsync();
+		asyncRequest.execute();
 	}
 
 }
