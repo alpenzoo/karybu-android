@@ -2,6 +2,7 @@ package com.arnia.karybu.menus;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -23,8 +24,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMenuItemsDetails;
@@ -53,8 +56,9 @@ public class MenuItemEditController extends KarybuFragment implements
 	private Spinner pageTypes;
 	private Button saveButton;
 
-	// menu parent srl
+	private String menuSRL;
 	private String menuItemSRL;
+	private String menuParentSrl;
 
 	private KarybuMenuItemsDetails details;
 
@@ -72,28 +76,28 @@ public class MenuItemEditController extends KarybuFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_edit_menu_item,
-				container, false);
+		View view = inflater.inflate(R.layout.layout_edit_menu_item, container,
+				false);
 		adapter = new ArrayAdapter<KarybuModule>(this.activity,
 				android.R.layout.simple_spinner_item);
 
-		availablePages = (Spinner) view
-				.findViewById(R.id.AVAILABLE_PAGES);
+		availablePages = (Spinner) view.findViewById(R.id.AVAILABLE_PAGES);
 		pageTypes = (Spinner) view.findViewById(R.id.PAGE_TYPES);
 
 		linkTitle = (EditText) view.findViewById(R.id.LINK_TEXT);
 		isNewWindow = (CheckBox) view.findViewById(R.id.NEW_WINDOW);
 
 		Bundle args = getArguments();
+		menuSRL = args.getString("menu_srl");
 		menuItemSRL = args.getString("menu_item_srl");
+		menuParentSrl = args.getString("menu_parent_srl");
 
 		// make request to get a list of modules for spinner
 		GetModulesAsyncTask task = new GetModulesAsyncTask();
 		task.execute();
 
 		// action for save button
-		saveButton = (Button) view
-				.findViewById(R.id.EDIT_MENU_SAVE_BUTTON);
+		saveButton = (Button) view.findViewById(R.id.EDIT_MENU_SAVE_BUTTON);
 		saveButton.setOnClickListener(this);
 
 		availablePages.setAdapter(adapter);
@@ -137,6 +141,8 @@ public class MenuItemEditController extends KarybuFragment implements
 	// called when the save button is pressed
 	@Override
 	public void onClick(View v) {
+		SaveMenuItemAsyncTask task = new SaveMenuItemAsyncTask();
+		task.execute();
 	}
 
 	// the method returns the type selected
@@ -232,8 +238,8 @@ public class MenuItemEditController extends KarybuFragment implements
 					+ menuItemSRL
 					+ "]]></menu_item_srl><module><![CDATA[menu]]></module><act><![CDATA[getMenuAdminItemInfo]]></act></params></methodCall>";
 
-			String response = KarybuHost.getINSTANCE().postRequest("/index.php",
-					xmlData);
+			String response = KarybuHost.getINSTANCE().postRequest(
+					"/index.php", xmlData);
 
 			Serializer serializer = new Persister();
 
@@ -341,6 +347,55 @@ public class MenuItemEditController extends KarybuFragment implements
 			}
 
 		}
+	}
+
+	private class SaveMenuItemAsyncTask extends
+			AsyncTask<Object, Object, Object> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(activity,
+					getString(R.string.processing));
+		}
+
+		@Override
+		protected Object doInBackground(Object... param) {
+			HashMap<String, String> params = new HashMap<String, String>();
+
+			params.put("ruleset", "insertMenuItem");
+			params.put("module", "mobile_communication");
+			params.put("act", "procmobile_communicationMenuItem");
+			params.put("menu_srl", menuSRL);
+			params.put("menu_item_srl", menuItemSRL);
+			params.put("menu_parent_srl", menuParentSrl);
+			params.put("menu_name_key", linkTitle.getText().toString());
+			params.put("menu_name", linkTitle.getText().toString());
+			params.put("cType", "SELECT");
+			params.put("module_type", returnType());
+			params.put("menu_open_window", openInNewWindow());
+			params.put("select_menu_url", availablePages.getSelectedItem()
+					.toString());
+
+			KarybuHost.getINSTANCE().postMultipart(params,
+					"/?XDEBUG_SESSION_START=netbeans-xdebug");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Object result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+			((MainActivityController) activity).backwardScreen();
+		}
+
+		private String openInNewWindow() {
+			if (isNewWindow.isChecked())
+				return "Y";
+			else
+				return "N";
+		}
+
 	}
 
 }
