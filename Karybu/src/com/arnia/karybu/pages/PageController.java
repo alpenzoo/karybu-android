@@ -7,11 +7,10 @@ import java.util.HashMap;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,15 +19,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPage;
+import com.arnia.karybu.controls.KarybuDialog;
 
-public class PageController extends KarybuFragment implements
-		OnClickListener, OnItemClickListener {
+public class PageController extends KarybuFragment implements OnClickListener,
+		OnItemClickListener {
 	private ListView listView;
 	private PageAdapter adapter;
 	private KarybuArrayList list;
@@ -37,12 +38,10 @@ public class PageController extends KarybuFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.layout_page, container,
-				false);
+		View view = inflater.inflate(R.layout.layout_page, container, false);
 
 		listView = (ListView) view.findViewById(R.id.PAGE_LISTVIEW);
-		addPageButton = (Button) view
-				.findViewById(R.id.PAGE_ADDBUTTON);
+		addPageButton = (Button) view.findViewById(R.id.PAGE_ADDBUTTON);
 		addPageButton.setOnClickListener(this);
 
 		adapter = new PageAdapter(this);
@@ -72,12 +71,12 @@ public class PageController extends KarybuFragment implements
 			Bundle args = new Bundle();
 			args.putString("mid", page.mid);
 			args.putString("document_srl", page.document_srl);
+			Log.i("leapkh", "[Page]document srl: " + page.document_srl);
 			pageEditor.setArguments(args);
 			MainActivityController mainActivity = (MainActivityController) this.activity;
 			mainActivity.addMoreScreen(pageEditor);
 		} else if (page.page_type.equals("WIDGET")) {
-			Intent intent = new Intent(this.activity,
-					WidgetController.class);
+			Intent intent = new Intent(this.activity, WidgetController.class);
 			intent.putExtra("mid", page.mid);
 			if (page.virtual_site != null) {
 				intent.putExtra("vid", page.virtual_site);
@@ -91,43 +90,32 @@ public class PageController extends KarybuFragment implements
 	@Override
 	public void onClick(View v) {
 
-		// delete button pressed
-		if (v.getId() == R.id.PAGEITEMCELL_DELETEBUTTON) {
+		switch (v.getId()) {
+		case R.id.PAGEITEMCELL_DELETEBUTTON:
 			final int index = (Integer) v.getTag();
-			new AlertDialog.Builder(activity)
-					.setTitle("Attention")
-					.setCancelable(false)
-					.setMessage("Do you want to delete this page?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
+			final KarybuDialog dialog = new KarybuDialog(activity);
+			dialog.setTitle("Attention");
+			dialog.setMessage("Do you want to delete this page?");
+			dialog.setPositiveButton(R.string.yes, new OnClickListener() {
 
-									// page where the user clicked
-									KarybuPage page = list.pages.get(index);
+				@Override
+				public void onClick(View v) {
+					KarybuPage page = list.pages.get(index);
 
-									KarybuFragment.startProgress(activity,
-											"Deleting...");
-									DeletePageAsyncTask task = new DeletePageAsyncTask();
-									task.execute(new String[] { page.module_srl });
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-
-								}
-
-							}).create().show();
-
-		} else if (v.getId() == R.id.PAGE_ADDBUTTON) {
+					KarybuFragment.startProgress(activity, "Deleting...");
+					DeletePageAsyncTask task = new DeletePageAsyncTask();
+					task.execute(new String[] { page.module_srl });
+					dialog.dismiss();
+				}
+			});
+			dialog.setNegativeButton(R.string.no);
+			dialog.show();
+			break;
+		case R.id.PAGE_ADDBUTTON:
 			MainActivityController mainActivity = (MainActivityController) activity;
 			mainActivity.addMoreScreen(new AddPageController());
+			break;
 		}
 	}
 

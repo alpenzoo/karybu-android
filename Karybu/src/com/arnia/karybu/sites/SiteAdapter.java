@@ -15,7 +15,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -157,7 +156,7 @@ public class SiteAdapter extends BaseAdapter {
 				final KarybuDialog dialog = new KarybuDialog(context);
 				dialog.setTitle(R.string.delete_website);
 				dialog.setMessage(R.string.delete_website_msg);
-				dialog.setPositiveButton("Yes", new OnClickListener() {
+				dialog.setPositiveButton(R.string.yes, new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -171,7 +170,7 @@ public class SiteAdapter extends BaseAdapter {
 						dialog.dismiss();
 					}
 				});
-				dialog.setNegativeButton("No");
+				dialog.setNegativeButton(R.string.no);
 				dialog.show();
 
 			}

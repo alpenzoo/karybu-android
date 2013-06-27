@@ -2,18 +2,21 @@ package com.arnia.karybu.pages;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.controls.KarybuTextEditor;
 
-public class EditPageController extends KarybuFragment implements OnClickListener {
+public class EditPageController extends KarybuFragment implements
+		OnClickListener {
 	private String mid;
 	private String document_srl;
 	private KarybuTextEditor htmlEditor;
@@ -24,16 +27,16 @@ public class EditPageController extends KarybuFragment implements OnClickListene
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_edit_page,
-				container, false);
+		View view = inflater.inflate(R.layout.layout_edit_page, container,
+				false);
 		htmlEditor = new KarybuTextEditor();
 
-		addNestedFragment(R.id.TEXT_EDITOR_HOLDER, htmlEditor,
-				"htmlTextEditor");
+		addNestedFragment(R.id.TEXT_EDITOR_HOLDER, htmlEditor, "htmlTextEditor");
 
 		Bundle args = getArguments();
 		mid = args.getString("mid");
 		document_srl = args.getString("document_srl");
+		Log.i("leapkh", "[Edit Page]document srl: " + document_srl);
 
 		saveButton = (Button) view.findViewById(R.id.PAGE_EDITOR_SAVE);
 		saveButton.setOnClickListener(this);
@@ -50,9 +53,11 @@ public class EditPageController extends KarybuFragment implements OnClickListene
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.PAGE_EDITOR_SAVE) {
+		switch (v.getId()) {
+		case R.id.PAGE_EDITOR_SAVE:
 			SavePageAsyncTask task = new SavePageAsyncTask();
 			task.execute();
+			break;
 		}
 	}
 
@@ -103,7 +108,7 @@ public class EditPageController extends KarybuFragment implements OnClickListene
 					+ "<error_return_url><![CDATA[/index.php?mid="
 					+ "&act=dispPageAdminContentModify]]></error_return_url>\n"
 					+ "<act><![CDATA[procPageAdminArticleDocumentInsert]]></act>\n"
-					+ "<mid><![CDATA[" + mid + "]]></mid>\n"
+					+ "<mid><![CDATA[" + mid + "]]></mid>\n" + mid
 					+ "<content><![CDATA[" + content + "]]></content>\n"
 					+ "<document_srl><![CDATA[" + document_srl
 					+ "]]></document_srl>\n" + "<title><![CDATA[" + title
