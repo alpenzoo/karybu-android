@@ -21,8 +21,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
+import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 
@@ -61,16 +63,13 @@ public class AddMenuItemController extends KarybuFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.layout_edit_menu_item,
-				container, false);
+		View view = inflater.inflate(R.layout.layout_edit_menu_item, container,
+				false);
 
-		availablePages = (Spinner) view
-				.findViewById(R.id.AVAILABLE_PAGES);
+		availablePages = (Spinner) view.findViewById(R.id.AVAILABLE_PAGES);
 		pageType = (Spinner) view.findViewById(R.id.PAGE_TYPES);
-		saveButton = (Button) view
-				.findViewById(R.id.EDIT_MENU_SAVE_BUTTON);
-		browserTitleEditText = (EditText) view
-				.findViewById(R.id.LINK_TEXT);
+		saveButton = (Button) view.findViewById(R.id.EDIT_MENU_SAVE_BUTTON);
+		browserTitleEditText = (EditText) view.findViewById(R.id.LINK_TEXT);
 		newWindow = (CheckBox) view.findViewById(R.id.NEW_WINDOW);
 
 		Bundle args = getArguments();
@@ -91,7 +90,7 @@ public class AddMenuItemController extends KarybuFragment implements
 	// called when the save button is pressed
 	@Override
 	public void onClick(View v) {
-		SelectModuleAsyncTask task = new SelectModuleAsyncTask();
+		AddMenuItemAsyncTask task = new AddMenuItemAsyncTask();
 		task.execute();
 	}
 
@@ -173,8 +172,16 @@ public class AddMenuItemController extends KarybuFragment implements
 		}
 	}
 
-	private class SelectModuleAsyncTask extends
+	private class AddMenuItemAsyncTask extends
 			AsyncTask<Object, Object, Object> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(activity,
+					getString(R.string.processing));
+		}
+
 		@Override
 		protected Object doInBackground(Object... param) {
 			HashMap<String, String> params = new HashMap<String, String>();
@@ -200,7 +207,8 @@ public class AddMenuItemController extends KarybuFragment implements
 		@Override
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
-			// finish();
+			KarybuFragment.dismissProgress();
+			((MainActivityController) activity).backwardScreen();
 		}
 	}
 
