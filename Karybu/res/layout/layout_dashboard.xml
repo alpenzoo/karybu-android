@@ -93,7 +93,7 @@
                     android:background="@drawable/bg_new_comment"
                     android:clickable="false"
                     android:gravity="center"
-                    android:text="5 NEW"
+                    android:text="New Comments"
                     android:textSize="11sp" />
             </RelativeLayout>
 
