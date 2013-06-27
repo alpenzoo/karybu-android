@@ -8,9 +8,7 @@ import java.util.HashMap;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,15 +19,16 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMenuItem;
 import com.arnia.karybu.classes.KarybuResponse;
+import com.arnia.karybu.controls.KarybuDialog;
 
 //Adapter for MenuItems list
-public class MenuItemsAdapter extends BaseAdapter implements
-		OnClickListener {
+public class MenuItemsAdapter extends BaseAdapter implements OnClickListener {
 	private Context context;
 	private ArrayList<KarybuMenuItem> arrayWithMenuItems;
 	private ArrayList<KarybuMenuItem> arrayWholeMenuItems;
@@ -37,7 +36,8 @@ public class MenuItemsAdapter extends BaseAdapter implements
 	private String menuSRL;
 
 	// setter
-	public void setArrayWithMenuItems(ArrayList<KarybuMenuItem> arrayWithMenuItems) {
+	public void setArrayWithMenuItems(
+			ArrayList<KarybuMenuItem> arrayWithMenuItems) {
 		this.arrayWithMenuItems = arrayWithMenuItems;
 	}
 
@@ -79,8 +79,8 @@ public class MenuItemsAdapter extends BaseAdapter implements
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(
-					R.layout.cellview_edit_menu_item, null);
+			convertView = inflater.inflate(R.layout.cellview_edit_menu_item,
+					null);
 		}
 
 		TextView menuItemNameTextView = (TextView) convertView
@@ -122,9 +122,9 @@ public class MenuItemsAdapter extends BaseAdapter implements
 		final int index = (Integer) v.getTag();
 		final KarybuMenuItem menuItem = arrayWithMenuItems.get(index);
 
-		if (v.getId() == R.id.MENUITEMEDIT_EDITBUTTON) {
+		switch (v.getId()) {
+		case R.id.MENUITEMEDIT_EDITBUTTON:
 			// change invoke activity to fragment
-
 			Bundle args = new Bundle();
 			args.putString("menu_parent_srl", menuItemParentSRL);
 			args.putString("menu_item_srl", menuItem.srl);
@@ -134,52 +134,44 @@ public class MenuItemsAdapter extends BaseAdapter implements
 			menuEditItem.setArguments(args);
 			MainActivityController mainActivity = (MainActivityController) context;
 			mainActivity.addMoreScreen(menuEditItem);
+			break;
 
-		} else if (v.getId() == R.id.MENUITEMEDIT_DELETEBUTTON) {
-			AlertDialog confirmDelete = new AlertDialog.Builder(context)
-					.setTitle(R.string.delete_menu_item_dialog_title)
-					.setMessage(R.string.delete_menu_item_dialog_description)
-					.setNegativeButton(
-							R.string.delete_menu_item_dialog_no,
-							new android.content.DialogInterface.OnClickListener() {
+		case R.id.MENUITEMEDIT_DELETEBUTTON:
+			final KarybuDialog dialog = new KarybuDialog(context);
+			dialog.setTitle(R.string.delete_menu_item_dialog_title);
+			dialog.setMessage(R.string.delete_menu_item_dialog_description);
+			dialog.setPositiveButton(R.string.yes, new OnClickListener() {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
+				@Override
+				public void onClick(View v) {
+					DeleteMenuItemAsyncTask task = new DeleteMenuItemAsyncTask();
+					task.execute(new String[] { menuItem.srl,
+							Integer.toString(index) });
+					dialog.dismiss();
+				}
+			});
+			dialog.setNegativeButton(R.string.no);
+			dialog.show();
+			break;
 
-								}
-
-							})
-					.setPositiveButton(
-							R.string.delete_menu_item_dialog_yes,
-							new android.content.DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									DeleteMenuItemAsyncTask task = new DeleteMenuItemAsyncTask();
-									task.execute(new String[] { menuItem.srl,
-											Integer.toString(index) });
-								}
-
-							})
-
-					.create();
-			confirmDelete.show();
-
-		} else if (v.getId() == R.id.MENUITEMEDIT_UPBUTTON) {
+		case R.id.MENUITEMEDIT_UPBUTTON:
 			moveCurrentItem((Integer) v.getTag(), -1);
+			break;
 
-		} else if (v.getId() == R.id.MENUITEMEDIT_DOWNBUTTON) {
+		case R.id.MENUITEMEDIT_DOWNBUTTON:
 			moveCurrentItem((Integer) v.getTag(), 1);
-		} else if (v.getId() == R.id.MENUITEMEDIT_SUBMENUBUTTON) {
-			MainActivityController mainActivity = (MainActivityController) context;
+			break;
+
+		case R.id.MENUITEMEDIT_SUBMENUBUTTON:
+			MainActivityController mainActivity2 = (MainActivityController) context;
 			MenuItemsController submenuController = new MenuItemsController();
-			Bundle args = new Bundle();
-			args.putString("menu_srl", menuSRL);
-			args.putString("menu_item_parent_srl", menuItem.srl);
-			submenuController.setArguments(args);
-			mainActivity.addMoreScreen(submenuController);
+			Bundle args2 = new Bundle();
+			args2.putString("menu_srl", menuSRL);
+			args2.putString("menu_item_parent_srl", menuItem.srl);
+			submenuController.setArguments(args2);
+			mainActivity2.addMoreScreen(submenuController);
+			break;
+
 		}
 	}
 
@@ -253,8 +245,8 @@ public class MenuItemsAdapter extends BaseAdapter implements
 
 			Reader reader = new StringReader(response);
 			try {
-				KarybuResponse confirmation = serializer.read(KarybuResponse.class,
-						reader, false);
+				KarybuResponse confirmation = serializer.read(
+						KarybuResponse.class, reader, false);
 
 				if (confirmation.value.equals("true")) {
 					Toast.makeText(context, "Update success", Toast.LENGTH_LONG)
@@ -286,7 +278,8 @@ public class MenuItemsAdapter extends BaseAdapter implements
 			params.put("menu_srl", menuSRL);
 			params.put("menu_item_srl", menu_item_srl);
 
-			response = KarybuHost.getINSTANCE().postMultipart(params, "/index.php");
+			response = KarybuHost.getINSTANCE().postMultipart(params,
+					"/index.php");
 			return null;
 		}
 
@@ -298,8 +291,8 @@ public class MenuItemsAdapter extends BaseAdapter implements
 
 			Reader reader = new StringReader(response);
 			try {
-				KarybuResponse confirmation = serializer.read(KarybuResponse.class,
-						reader, false);
+				KarybuResponse confirmation = serializer.read(
+						KarybuResponse.class, reader, false);
 
 				if (confirmation.value.equals("true")) {
 					arrayWithMenuItems.remove(index);

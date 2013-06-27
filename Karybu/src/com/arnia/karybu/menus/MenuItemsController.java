@@ -9,16 +9,16 @@ import org.simpleframework.xml.core.Persister;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMenu;
@@ -37,13 +37,12 @@ public class MenuItemsController extends KarybuFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.layout_edit_menu,
-				container, false);
+		View view = inflater.inflate(R.layout.layout_edit_menu, container,
+				false);
 
 		ListView listView = (ListView) view
 				.findViewById(R.id.EDITMENU_LISTVIEW);
-		addMenuItemButton = (Button) view
-				.findViewById(R.id.EDITMENU_ADDBUTTON);
+		addMenuItemButton = (Button) view.findViewById(R.id.EDITMENU_ADDBUTTON);
 
 		addMenuItemButton.setOnClickListener(new OnClickListener() {
 			// method called when the Add Button is pressed
@@ -62,8 +61,7 @@ public class MenuItemsController extends KarybuFragment {
 		Bundle argument = getArguments();
 		menuSRL = argument.getString("menu_srl");
 		menuItemParentSRL = argument.getString("menu_item_parent_srl");
-		adapter = new MenuItemsAdapter(activity, menuItemParentSRL,
-				menuSRL);
+		adapter = new MenuItemsAdapter(activity, menuItemParentSRL, menuSRL);
 		listView.setAdapter(adapter);
 
 		return view;
@@ -95,12 +93,12 @@ public class MenuItemsController extends KarybuFragment {
 			xmlData = KarybuHost
 					.getINSTANCE()
 					.getRequest(
-							"/index.php?XDEBUG_SESSION_START=netbeans-xdebug&module=mobile_communication&act=procmobile_communicationDisplayMenu");
+							"/index.php?module=mobile_communication&act=procmobile_communicationDisplayMenu");
 
 			// parse response
-			Serializer serializer = new Persister();
-			Reader reader = new StringReader(xmlData);
 			try {
+				Serializer serializer = new Persister();
+				Reader reader = new StringReader(xmlData);
 				arrayWithMenus = serializer.read(KarybuArrayList.class, reader,
 						false);
 			} catch (Exception e) {
