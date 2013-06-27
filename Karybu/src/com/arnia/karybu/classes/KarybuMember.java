@@ -41,7 +41,7 @@ public class KarybuMember implements Serializable
 	@Element(required=false)
 	public String description;
 	
-	@Element
+	@Element(required=false)
 	public String find_account_question;
 	
 	@Element(required=false)
