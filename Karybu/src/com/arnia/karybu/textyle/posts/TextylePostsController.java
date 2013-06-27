@@ -110,7 +110,6 @@ public class TextylePostsController extends KarybuFragment implements
 
 		public GetPostsAsycTask(int postType) {
 			this.postType = postType;
-			// listViewFotter.setVisibility(View.VISIBLE);
 			if (listView.getFooterViewsCount() == 0)
 				listView.addFooterView(listViewFotter);
 		}
@@ -281,6 +280,9 @@ public class TextylePostsController extends KarybuFragment implements
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		int postType;
+
+		if (textyle == null)
+			return;
 
 		switch (checkedId) {
 		case R.id.TEXTYLE_POSTS_ALLOPTION:
