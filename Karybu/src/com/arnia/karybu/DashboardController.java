@@ -7,12 +7,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.arnia.karybu.classes.KarybuTextyle;
 import com.arnia.karybu.data.KarybuSite;
-import com.arnia.karybu.global_settings.GlobalSettingsController;
 import com.arnia.karybu.members.MembersController;
 import com.arnia.karybu.menus.MenuController;
 import com.arnia.karybu.pages.AddPageController;
 import com.arnia.karybu.pages.PageController;
+import com.arnia.karybu.settings.GlobalSettingsController;
 import com.arnia.karybu.textyle.comments.TextyleCommentsController;
 import com.arnia.karybu.textyle.posts.TextyleAddPostController;
 import com.arnia.karybu.textyle.posts.TextylePostsController;
@@ -123,6 +124,19 @@ public class DashboardController extends KarybuFragment implements
 	protected void onSelectedSite(KarybuSite site) {
 		super.onSelectedSite(site);
 		statisticController.refreshStatistic();
+	}
+
+	@Override
+	protected void onSelectedTextyle(KarybuTextyle textyle) {
+		super.onSelectedTextyle(textyle);
+		String commentCountStr;
+		if (textyle == null || Integer.parseInt(textyle.comment_count) == 0)
+			commentCountStr = getString(R.string.no_new_comment);
+		else
+			commentCountStr = String.format(
+					getString(R.string.new_comment_count),
+					textyle.comment_count);
+		commentCount.setText(commentCountStr);
 	}
 
 }
