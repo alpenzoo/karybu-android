@@ -169,7 +169,7 @@ public class AddPageController extends KarybuFragment implements
 			// make request
 			response = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationGetLayout");
 
 			// parse response

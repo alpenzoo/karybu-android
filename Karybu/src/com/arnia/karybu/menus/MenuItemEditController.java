@@ -316,7 +316,7 @@ public class MenuItemEditController extends KarybuFragment implements
 		protected Object doInBackground(Object... params) {
 			xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationListModules");
 
 			Serializer serializer = new Persister();
@@ -378,7 +378,7 @@ public class MenuItemEditController extends KarybuFragment implements
 					.toString());
 
 			KarybuHost.getINSTANCE().postMultipart(params,
-					"/?XDEBUG_SESSION_START=netbeans-xdebug");
+					"");
 			return null;
 		}
 

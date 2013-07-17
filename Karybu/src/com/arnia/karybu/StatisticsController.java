@@ -106,7 +106,7 @@ public class StatisticsController extends KarybuFragment implements
 			// making the request
 			response = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationViewerData");
 
 			// parsing the response

@@ -36,7 +36,6 @@ public class EditPageController extends KarybuFragment implements
 		Bundle args = getArguments();
 		mid = args.getString("mid");
 		document_srl = args.getString("document_srl");
-		Log.i("leapkh", "[Edit Page]document srl: " + document_srl);
 
 		saveButton = (Button) view.findViewById(R.id.PAGE_EDITOR_SAVE);
 		saveButton.setOnClickListener(this);
@@ -71,12 +70,12 @@ public class EditPageController extends KarybuFragment implements
 		protected Object doInBackground(Object... params) {
 			responseContent = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationArticleContent&srl="
 									+ document_srl);
 			responseTitle = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationArticleTitle&srl="
 									+ document_srl);
 			return null;

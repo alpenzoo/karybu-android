@@ -153,8 +153,8 @@ public class TextyleEditPostContentController extends KarybuFragment
 		protected Object doInBackground(Object... params) {
 			content = KarybuHost
 					.getINSTANCE()
-					.getRequest(
-							"/index.php?XDEBUG_SESSION_START=netbeans-xdebug&module=mobile_communication&act=procmobile_communicationContentForPost&module_srl="
+					.postRequest(
+							"/index.php?module=mobile_communication&act=procmobile_communicationContentForPost&module_srl="
 									+ textyle.module_srl
 									+ "&document_srl="
 									+ document_srl);

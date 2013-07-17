@@ -109,9 +109,9 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 
 				xmlData = KarybuHost
 						.getINSTANCE()
-						.getRequest(
+						.postRequest(
 								"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
-										+ username + "&password=" + password);
+										+ username + "&password=" + password, "");
 
 			} catch (Exception e) {
 				e.printStackTrace();

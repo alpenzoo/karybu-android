@@ -220,7 +220,7 @@ public class AddMenuItemController extends KarybuFragment implements
 		protected Object doInBackground(Object... params) {
 			String xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationListModules");
 
 			Serializer serializer = new Persister();

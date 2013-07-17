@@ -92,7 +92,7 @@ public class MenuItemsController extends KarybuFragment {
 			// send request
 			xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationDisplayMenu");
 
 			// parse response

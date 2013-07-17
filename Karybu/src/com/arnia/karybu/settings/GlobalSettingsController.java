@@ -166,7 +166,7 @@ public class GlobalSettingsController extends KarybuFragment implements
 			// make request
 			xmlResponse = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationLoadSettings");
 
 			// parse response

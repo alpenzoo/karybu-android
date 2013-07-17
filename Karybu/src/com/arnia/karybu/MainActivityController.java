@@ -301,7 +301,7 @@ public class MainActivityController extends FragmentActivity implements
 				KarybuHost.getINSTANCE().setURL(url);
 				KarybuHost
 						.getINSTANCE()
-						.getRequest(
+						.postRequest(
 								"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
 										+ userid + "&password=" + password);
 				return true;
@@ -347,13 +347,13 @@ public class MainActivityController extends FragmentActivity implements
 
 					KarybuHost
 							.getINSTANCE()
-							.getRequest(
+							.postRequest(
 									"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
 											+ userid + "&password=" + password);
 
 					String response = KarybuHost
 							.getINSTANCE()
-							.getRequest(
+							.postRequest(
 									"/index.php?module=mobile_communication&act=procmobile_communicationTextyleList");
 
 					// parsing the response

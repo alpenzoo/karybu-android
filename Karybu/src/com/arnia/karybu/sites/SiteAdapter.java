@@ -209,7 +209,7 @@ public class SiteAdapter extends BaseAdapter {
 
 				xmlData = KarybuHost
 						.getINSTANCE()
-						.getRequest(
+						.postRequest(
 								"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
 										+ site.userName
 										+ "&password="

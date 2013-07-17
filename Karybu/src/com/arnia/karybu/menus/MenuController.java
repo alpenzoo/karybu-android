@@ -180,8 +180,8 @@ public class MenuController extends KarybuFragment implements
 		protected Object doInBackground(Object... params) {
 			xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
-							"/index.php?XDEBUG_SESSION_START=netbeans-xdebug&module=mobile_communication&act=procmobile_communicationDisplayMenu");
+					.postRequest(
+							"/index.php?module=mobile_communication&act=procmobile_communicationDisplayMenu");
 
 			Serializer serializer = new Persister();
 

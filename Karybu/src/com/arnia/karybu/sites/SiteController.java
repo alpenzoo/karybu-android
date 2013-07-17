@@ -132,7 +132,7 @@ public class SiteController extends KarybuFragment implements OnClickListener {
 
 				xmlData = KarybuHost
 						.getINSTANCE()
-						.getRequest(
+						.postRequest(
 								"/index.php?module=mobile_communication&act=procmobile_communicationLogin&user_id="
 										+ site.userName
 										+ "&password="

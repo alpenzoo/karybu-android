@@ -71,7 +71,6 @@ public class PageController extends KarybuFragment implements OnClickListener,
 			Bundle args = new Bundle();
 			args.putString("mid", page.mid);
 			args.putString("document_srl", page.document_srl);
-			Log.i("leapkh", "[Page]document srl: " + page.document_srl);
 			pageEditor.setArguments(args);
 			MainActivityController mainActivity = (MainActivityController) this.activity;
 			mainActivity.addMoreScreen(pageEditor);
@@ -156,7 +155,7 @@ public class PageController extends KarybuFragment implements OnClickListener,
 		protected Object doInBackground(Object... params) {
 			xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationDisplayPages");
 
 			Serializer serializer = new Persister();

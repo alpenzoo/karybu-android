@@ -72,6 +72,7 @@ public class TextylePostsController extends KarybuFragment implements
 		radioGroup = (SegmentedRadioGroup) fragmentView
 				.findViewById(R.id.POST_FILTER);
 		radioGroup.setOnCheckedChangeListener(this);
+		radioGroup.check(R.id.TEXTYLE_POSTS_ALLOPTION);
 
 		listView = (ListView) fragmentView
 				.findViewById(R.id.TEXTYLE_POSTS_LISTVIEW);
@@ -94,7 +95,6 @@ public class TextylePostsController extends KarybuFragment implements
 	@Override
 	protected void onSelectedTextyle(KarybuTextyle textyle) {
 		super.onSelectedTextyle(textyle);
-		Log.i("leapkh", "[TextylePostController]onSelectedTextyle");
 		this.textyle = textyle;
 		postsArray = new KarybuArrayList[4];
 		isTaskLoading = new boolean[4];
@@ -153,7 +153,7 @@ public class TextylePostsController extends KarybuFragment implements
 						+ pageNumber;
 			}
 
-			String response = KarybuHost.getINSTANCE().getRequest(requestUrl);
+			String response = KarybuHost.getINSTANCE().postRequest(requestUrl);
 
 			Serializer serializer = new Persister();
 
@@ -281,8 +281,10 @@ public class TextylePostsController extends KarybuFragment implements
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		int postType;
 
-		if (textyle == null)
+		if (textyle == null){
+			Toast.makeText(activity, getString(R.string.no_textyle), Toast.LENGTH_LONG).show();
 			return;
+		}
 
 		switch (checkedId) {
 		case R.id.TEXTYLE_POSTS_ALLOPTION:

@@ -83,7 +83,7 @@ public class MembersController extends KarybuFragment implements
 			// make the request
 			xmlData = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationDisplayMembers");
 
 			// parse the response

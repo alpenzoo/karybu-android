@@ -81,7 +81,7 @@ public class TextyleCommentsController extends KarybuFragment implements
 			// send request
 			response = KarybuHost
 					.getINSTANCE()
-					.getRequest(
+					.postRequest(
 							"/index.php?module=mobile_communication&act=procmobile_communicationShowComments&module_srl="
 									+ textyle.module_srl);
 
