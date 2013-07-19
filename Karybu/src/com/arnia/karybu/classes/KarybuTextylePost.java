@@ -24,9 +24,6 @@ public class KarybuTextylePost
 	@Element
 	public String url;
 	
-	@Element
-	public String status;
-	
 	@Override
 	public String toString() 
 	{

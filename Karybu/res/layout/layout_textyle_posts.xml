@@ -45,24 +45,35 @@
                 android:textColor="@color/radio_colors" />
 
             <RadioButton
-                android:id="@+id/TEXTYLE_POSTS_DRAFTSOPTION"
+                android:id="@+id/TEXTYLE_POSTS_SECRETOPTION"
                 android:layout_weight=".5"
                 android:button="@null"
                 android:gravity="center"
                 android:minHeight="33dip"
                 android:minWidth="40dip"
-                android:text="@string/drafts"
+                android:text="@string/secret"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/radio_colors" />
 
             <RadioButton
-                android:id="@+id/TEXTYLE_POSTS_TRASHOPTION"
+                android:id="@+id/TEXTYLE_POSTS_TEMPORARYOPTION"
                 android:layout_weight=".5"
                 android:button="@null"
                 android:gravity="center"
                 android:minHeight="33dip"
                 android:minWidth="40dip"
-                android:text="@string/trash"
+                android:text="@string/temporary"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/radio_colors" />
+
+            <RadioButton
+                android:id="@+id/TEXTYLE_POSTS_REPORTEDOPTION"
+                android:layout_weight=".5"
+                android:button="@null"
+                android:gravity="center"
+                android:minHeight="33dip"
+                android:minWidth="40dip"
+                android:text="@string/reported"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/radio_colors" />
         </com.arnia.karybu.controls.SegmentedRadioGroup>

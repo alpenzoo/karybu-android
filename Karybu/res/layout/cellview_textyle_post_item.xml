@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     android:padding="10dp" >
 
@@ -11,14 +10,14 @@
         style="@style/round_button"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="VIEW POST" />
+        android:text="VIEW" />
 
     <Button
-        android:id="@+id/POST_UNPUBLISH_POST"
+        android:id="@+id/POST_DELETE_POST"
         style="@style/round_button"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/POST_VIEW_POST"
-        android:text="UNPUBLISH" />
+        android:text="DELETE" />
 
     <TextView
         android:id="@+id/POST_POST_TITLE"
@@ -32,7 +31,7 @@
         android:id="@+id/POST_POST_COMMENT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/POST_UNPUBLISH_POST"
+        android:layout_alignBaseline="@+id/POST_DELETE_POST"
         android:layout_alignParentLeft="true"
         android:text="Comment count" />
 

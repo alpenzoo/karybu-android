@@ -132,7 +132,8 @@ public class KarybuHost {
 		if (formKey == null || formKeyName == null) {
 			getFormKey();
 		}
-		String formKeyQuery = formKeyName + "=" + formKey;
+		//String formKeyQuery = formKeyName + "=" + formKey;
+		String formKeyQuery = formKeyName + "=" + formKey + "&XDEBUG_SESSION_START=netbeans-xdebug";
 		if (requestUrl.contains("?"))
 			requestUrl = requestUrl + "&" + formKeyQuery;
 		else

@@ -116,7 +116,7 @@ public class MainActivityController extends FragmentActivity implements
 	public void requestToBrowser() {
 		if (selectedSite != null) {
 			Intent browser = new Intent(Intent.ACTION_VIEW,
-					Uri.parse(selectedSite.siteUrl));
+					Uri.parse(selectedSite.siteUrl + "/admin"));
 			this.startActivity(browser);
 		}
 	}

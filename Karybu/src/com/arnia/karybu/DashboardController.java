@@ -123,7 +123,8 @@ public class DashboardController extends KarybuFragment implements
 	@Override
 	protected void onSelectedSite(KarybuSite site) {
 		super.onSelectedSite(site);
-		statisticController.refreshStatistic();
+		if (statisticController != null)
+			statisticController.refreshStatistic();
 	}
 
 	@Override

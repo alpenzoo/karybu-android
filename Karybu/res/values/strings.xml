@@ -40,10 +40,13 @@
     <string name="menu_settings_about">About</string>
 
     <!-- Post -->
-    <string name="all_post">All Posts</string>
-    <string name="published">Published</string>
-    <string name="drafts">Drafts</string>
-    <string name="trash">Trash</string>
+    <string name="all_post">All</string>
+    <string name="published">Public</string>
+    <string name="secret">Secret</string>
+    <string name="temporary">Temporary</string>
+    <string name="reported">Reported</string>
+    <string name="delete_post_title">Delete Post</string>
+    <string name="delete_post_msg">Delete this post?</string>
 
     <!-- New post layout -->
     <string name="post_title">Post title</string>

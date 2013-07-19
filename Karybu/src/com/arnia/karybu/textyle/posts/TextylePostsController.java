@@ -10,33 +10,25 @@ import org.simpleframework.xml.core.Persister;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
 
 import com.arnia.karybu.KarybuFragment;
-import com.arnia.karybu.MainActivityController;
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPagination;
-import com.arnia.karybu.classes.KarybuTextyle;
 import com.arnia.karybu.classes.KarybuTextylePost;
 import com.arnia.karybu.controls.SegmentedRadioGroup;
 
 public class TextylePostsController extends KarybuFragment implements
-		OnClickListener, OnItemClickListener, OnScrollListener,
-		OnCheckedChangeListener {
+		OnScrollListener, OnCheckedChangeListener {
 
 	// UI references
 	private ListView listView;
@@ -44,15 +36,14 @@ public class TextylePostsController extends KarybuFragment implements
 	private TextylePostAdapter adapter;
 	private SegmentedRadioGroup radioGroup;
 
-	private KarybuTextyle textyle;
-
 	private KarybuArrayList[] postsArray;
 	private boolean[] isTaskLoading;
 
 	private final int POST_TYPE_ALL = 0;
 	private final int POST_TYPE_PUBLISHED = 1;
-	private final int POST_TYPE_DRAFT = 2;
-	private final int POST_TYPE_TRASH = 3;
+	private final int POST_TYPE_SECRET = 2;
+	private final int POST_TYPE_TEMPORARY = 3;
+	private final int POST_TYPE_REPORTED = 4;
 
 	private View fragmentView;
 
@@ -60,19 +51,17 @@ public class TextylePostsController extends KarybuFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		textyle = ((MainActivityController) activity).getSelectedTextyle();
-
 		fragmentView = inflater.inflate(R.layout.layout_textyle_posts,
 				container, false);
 
-		postsArray = new KarybuArrayList[4];
-		isTaskLoading = new boolean[4];
+		postsArray = new KarybuArrayList[5];
+		isTaskLoading = new boolean[5];
 
 		// UI reference
 		radioGroup = (SegmentedRadioGroup) fragmentView
 				.findViewById(R.id.POST_FILTER);
 		radioGroup.setOnCheckedChangeListener(this);
-		radioGroup.check(R.id.TEXTYLE_POSTS_ALLOPTION);
+		// radioGroup.check(R.id.TEXTYLE_POSTS_ALLOPTION);
 
 		listView = (ListView) fragmentView
 				.findViewById(R.id.TEXTYLE_POSTS_LISTVIEW);
@@ -86,21 +75,9 @@ public class TextylePostsController extends KarybuFragment implements
 		// Get virtual site and add it to action bar
 		adapter = new TextylePostAdapter(activity);
 		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(this);
 		listView.setOnScrollListener(this);
 
 		return fragmentView;
-	}
-
-	@Override
-	protected void onSelectedTextyle(KarybuTextyle textyle) {
-		super.onSelectedTextyle(textyle);
-		this.textyle = textyle;
-		postsArray = new KarybuArrayList[4];
-		isTaskLoading = new boolean[4];
-		adapter.clearData();
-		if (textyle != null)
-			onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
 	}
 
 	private class GetPostsAsycTask extends
@@ -124,34 +101,9 @@ public class TextylePostsController extends KarybuFragment implements
 		@Override
 		protected KarybuArrayList doInBackground(Integer... params) {
 			int pageNumber = params.length == 0 ? 1 : params[0];
-			String requestUrl;
-			switch (postType) {
-			case POST_TYPE_ALL:
-				requestUrl = "/index.php?module=mobile_communication"
-						+ "&act=procmobile_communicationTextylePostList&module_srl="
-						+ textyle.module_srl + "&published=1&page="
-						+ pageNumber;
-				break;
-
-			case POST_TYPE_PUBLISHED:
-				requestUrl = "/index.php?module=mobile_communication"
-						+ "&act=procmobile_communicationTextylePostList&module_srl="
-						+ textyle.module_srl + "&published=2&page="
-						+ pageNumber;
-				break;
-
-			case POST_TYPE_DRAFT:
-				requestUrl = "/index.php?module=mobile_communication"
-						+ "&act=procmobile_communicationTextylePostList&module_srl="
-						+ textyle.module_srl + "&published=3&page="
-						+ pageNumber;
-				break;
-			default:
-				requestUrl = "/index.php?module=mobile_communication"
-						+ "&act=procmobile_communicationTextylePostList&module_srl="
-						+ textyle.module_srl + "&published=0&page="
-						+ pageNumber;
-			}
+			String requestUrl = "/index.php?module=mobile_communication"
+					+ "&act=procmobile_communicationTextylePostList&type="
+					+ postType + "&page=" + pageNumber + "&list_count=20";
 
 			String response = KarybuHost.getINSTANCE().postRequest(requestUrl);
 
@@ -196,36 +148,6 @@ public class TextylePostsController extends KarybuFragment implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-				.show();
-
-		TextyleEditPostContentController editPostContentController = new TextyleEditPostContentController();
-
-		KarybuTextylePost post = (KarybuTextylePost) parent.getAdapter()
-				.getItem(position);
-
-		Bundle args = new Bundle();
-		args.putSerializable("textyle", textyle);
-		args.putString("document_srl", post.document_srl);
-		args.putString("title", post.title);
-		args.putString("category_srl", post.category_srl);
-
-		editPostContentController.setArguments(args);
-
-		((MainActivityController) activity)
-				.addMoreScreen(editPostContentController);
-
-	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 
@@ -242,11 +164,14 @@ public class TextylePostsController extends KarybuFragment implements
 				postType = POST_TYPE_PUBLISHED;
 				break;
 
-			case R.id.TEXTYLE_POSTS_DRAFTSOPTION:
-				postType = POST_TYPE_DRAFT;
+			case R.id.TEXTYLE_POSTS_SECRETOPTION:
+				postType = POST_TYPE_SECRET;
 				break;
-			case R.id.TEXTYLE_POSTS_TRASHOPTION:
-				postType = POST_TYPE_TRASH;
+			case R.id.TEXTYLE_POSTS_TEMPORARYOPTION:
+				postType = POST_TYPE_TEMPORARY;
+				break;
+			case R.id.TEXTYLE_POSTS_REPORTEDOPTION:
+				postType = POST_TYPE_REPORTED;
 				break;
 			default:
 				postType = -1;
@@ -259,11 +184,8 @@ public class TextylePostsController extends KarybuFragment implements
 				if (postsArray[postType] != null
 						&& postsArray[postType].pagination != null) {
 					if (postsArray[postType].pagination.cur_page < postsArray[postType].pagination.total_page) {
-						if (textyle != null) {
-							GetPostsAsycTask task = new GetPostsAsycTask(
-									postType);
-							task.execute(postsArray[postType].pagination.cur_page + 1);
-						}
+						GetPostsAsycTask task = new GetPostsAsycTask(postType);
+						task.execute(postsArray[postType].pagination.cur_page + 1);
 					}
 				}
 			}
@@ -281,11 +203,6 @@ public class TextylePostsController extends KarybuFragment implements
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		int postType;
 
-		if (textyle == null){
-			Toast.makeText(activity, getString(R.string.no_textyle), Toast.LENGTH_LONG).show();
-			return;
-		}
-
 		switch (checkedId) {
 		case R.id.TEXTYLE_POSTS_ALLOPTION:
 			postType = POST_TYPE_ALL;
@@ -295,11 +212,14 @@ public class TextylePostsController extends KarybuFragment implements
 			postType = POST_TYPE_PUBLISHED;
 			break;
 
-		case R.id.TEXTYLE_POSTS_DRAFTSOPTION:
-			postType = POST_TYPE_DRAFT;
+		case R.id.TEXTYLE_POSTS_SECRETOPTION:
+			postType = POST_TYPE_SECRET;
 			break;
-		case R.id.TEXTYLE_POSTS_TRASHOPTION:
-			postType = POST_TYPE_TRASH;
+		case R.id.TEXTYLE_POSTS_TEMPORARYOPTION:
+			postType = POST_TYPE_TEMPORARY;
+			break;
+		case R.id.TEXTYLE_POSTS_REPORTEDOPTION:
+			postType = POST_TYPE_REPORTED;
 			break;
 		default:
 			postType = -1;
