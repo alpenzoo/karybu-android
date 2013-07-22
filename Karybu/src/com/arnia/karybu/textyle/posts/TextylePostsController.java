@@ -3,10 +3,8 @@ package com.arnia.karybu.textyle.posts;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
@@ -60,8 +57,8 @@ public class TextylePostsController extends KarybuFragment implements
 		// UI reference
 		radioGroup = (SegmentedRadioGroup) fragmentView
 				.findViewById(R.id.POST_FILTER);
+		radioGroup.check(R.id.TEXTYLE_POSTS_ALLOPTION);
 		radioGroup.setOnCheckedChangeListener(this);
-		// radioGroup.check(R.id.TEXTYLE_POSTS_ALLOPTION);
 
 		listView = (ListView) fragmentView
 				.findViewById(R.id.TEXTYLE_POSTS_LISTVIEW);
@@ -76,10 +73,12 @@ public class TextylePostsController extends KarybuFragment implements
 		adapter = new TextylePostAdapter(activity);
 		listView.setAdapter(adapter);
 		listView.setOnScrollListener(this);
+		
+		onCheckedChanged(radioGroup, R.id.TEXTYLE_POSTS_ALLOPTION);
 
 		return fragmentView;
 	}
-
+	
 	private class GetPostsAsycTask extends
 			AsyncTask<Integer, Void, KarybuArrayList> {
 
@@ -225,7 +224,7 @@ public class TextylePostsController extends KarybuFragment implements
 			postType = -1;
 			return;
 		}
-
+		
 		if (postType == -1)
 			return;
 
