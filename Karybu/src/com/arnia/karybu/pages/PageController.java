@@ -10,7 +10,6 @@ import org.simpleframework.xml.core.Persister;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +26,7 @@ import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPage;
 import com.arnia.karybu.controls.KarybuDialog;
+import com.arnia.karybu.data.KarybuSite;
 
 public class PageController extends KarybuFragment implements OnClickListener,
 		OnItemClickListener {
@@ -55,7 +55,6 @@ public class PageController extends KarybuFragment implements OnClickListener,
 		super.onResume();
 
 		// send request to get pages
-		KarybuFragment.startProgress(getActivity(), "Loading...");
 		GetPagesAsyncTask asyncRequest = new GetPagesAsyncTask();
 		asyncRequest.execute();
 
@@ -152,6 +151,13 @@ public class PageController extends KarybuFragment implements OnClickListener,
 		String xmlData;
 
 		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(getActivity(),
+					getString(R.string.loading));
+		}
+
+		@Override
 		protected Object doInBackground(Object... params) {
 			xmlData = KarybuHost
 					.getINSTANCE()
@@ -173,13 +179,20 @@ public class PageController extends KarybuFragment implements OnClickListener,
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
 
-			dismissProgress();
+			KarybuFragment.dismissProgress();
 			if (list != null && list.pages != null) {
 				adapter.setArrayWithPages(list.pages);
 				adapter.notifyDataSetChanged();
 			}
 		}
 
+	}
+
+	@Override
+	protected void onSelectedSite(KarybuSite site) {
+		super.onSelectedSite(site);
+		GetPagesAsyncTask asyncRequest = new GetPagesAsyncTask();
+		asyncRequest.execute();
 	}
 
 }

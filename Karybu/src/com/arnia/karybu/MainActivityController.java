@@ -356,6 +356,9 @@ public class MainActivityController extends FragmentActivity implements
 							.postRequest(
 									"/index.php?module=mobile_communication&act=procmobile_communicationTextyleList");
 
+					if (response == null)
+						continue;
+
 					// parsing the response
 					Serializer serializer = new Persister();
 					Reader reader = new StringReader(response);
@@ -390,7 +393,7 @@ public class MainActivityController extends FragmentActivity implements
 		if (selectedItem.getClass() == KarybuSite.class) {
 			KarybuSite site = (KarybuSite) selectedItem;
 			if (site != selectedSite) {
-				// Log.i("TAG","[MaintActivity]Change from site to site");
+				// Log.i("TAG", "[MaintActivity]Change from site to site");
 				selectedSite = (KarybuSite) selectedItem;
 				new LogInInBackground() {
 					@Override
@@ -404,7 +407,7 @@ public class MainActivityController extends FragmentActivity implements
 					}
 				}.execute((KarybuSite) selectedItem);
 			} else {
-				// Log.i("TAG","[MaintActivity]Change from textyle to site");
+				// Log.i("TAG", "[MaintActivity]Change from textyle to site");
 				KarybuFragment currentScreen = getCurrentDisplayedFragment();
 				KarybuTextyle textyle = getSelectedTextyle();
 				currentScreen.onSelectedTextyle(textyle);
@@ -414,7 +417,8 @@ public class MainActivityController extends FragmentActivity implements
 			KarybuSite site = getSiteByTextyle(textyle, position);
 			if (site != selectedSite) {
 				selectedSite = site;
-				// Log.i("TAG","[MaintActivity]Change from textyle to site of another site");
+				// Log.i("TAG",
+				// "[MaintActivity]Change from textyle to site of another site");
 				new LogInInBackground() {
 					@Override
 					protected void onPostExecute(Boolean result) {
@@ -426,7 +430,8 @@ public class MainActivityController extends FragmentActivity implements
 					}
 				}.execute(selectedSite);
 			} else {
-				// Log.i("TAG","[MaintActivity]Change from textyle to textyle in current site");
+				// Log.i("TAG",
+				// "[MaintActivity]Change from textyle to textyle in current site");
 				KarybuFragment currentScreen = getCurrentDisplayedFragment();
 				currentScreen.onSelectedTextyle(textyle);
 			}

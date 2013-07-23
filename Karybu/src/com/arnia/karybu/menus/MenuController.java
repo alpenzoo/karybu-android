@@ -28,6 +28,7 @@ import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuMenu;
 import com.arnia.karybu.controls.KarybuDialog;
+import com.arnia.karybu.data.KarybuSite;
 
 public class MenuController extends KarybuFragment implements
 		OnItemClickListener, OnClickListener {
@@ -56,12 +57,14 @@ public class MenuController extends KarybuFragment implements
 
 		addMenuButton.setOnClickListener(this);
 
-		KarybuFragment
-				.startProgress(getActivity(), getString(R.string.loading));
+		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 		GetMenusAsyncTask getAsyncRequest = new GetMenusAsyncTask();
 		getAsyncRequest.execute();
-
-		return view;
 	}
 
 	// called when an item from list is pressed
@@ -175,6 +178,13 @@ public class MenuController extends KarybuFragment implements
 	private class GetMenusAsyncTask extends AsyncTask<Object, Object, Object> {
 		String xmlData;
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(getActivity(),
+					getString(R.string.loading));
+		}
+
 		// send the request
 		@Override
 		protected Object doInBackground(Object... params) {
@@ -212,4 +222,12 @@ public class MenuController extends KarybuFragment implements
 		}
 
 	}
+
+	@Override
+	protected void onSelectedSite(KarybuSite site) {
+		super.onSelectedSite(site);
+		GetMenusAsyncTask getAsyncRequest = new GetMenusAsyncTask();
+		getAsyncRequest.execute();
+	}
+
 }
