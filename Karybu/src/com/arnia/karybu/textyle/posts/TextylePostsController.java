@@ -23,6 +23,7 @@ import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPagination;
 import com.arnia.karybu.classes.KarybuTextylePost;
 import com.arnia.karybu.controls.SegmentedRadioGroup;
+import com.arnia.karybu.data.KarybuSite;
 import com.arnia.karybu.utilities.CommonUtils;
 
 public class TextylePostsController extends KarybuFragment implements
@@ -241,6 +242,13 @@ public class TextylePostsController extends KarybuFragment implements
 			adapter.setArrayWithPosts(postsArray[postType].posts);
 			adapter.notifyDataSetChanged();
 		}
+	}
+
+	@Override
+	protected void onSelectedSite(KarybuSite site) {
+		super.onSelectedSite(site);
+		postsArray = new KarybuArrayList[5];
+		onCheckedChanged(radioGroup, radioGroup.getCheckedRadioButtonId());
 	}
 
 }
