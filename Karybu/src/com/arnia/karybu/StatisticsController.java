@@ -55,6 +55,7 @@ public class StatisticsController extends KarybuFragment implements
 	private final int DAYS_PER_RANGE = 7;
 	private ImageButton btnArrowLeft;
 	private ImageButton btnArrowRight;
+	private boolean isRefreshing;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +81,15 @@ public class StatisticsController extends KarybuFragment implements
 
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		refreshStatistic();
+	}
+
 	public void refreshStatistic() {
+		if (isRefreshing)
+			return;
 		GetStatisticsAsyncTask task = new GetStatisticsAsyncTask();
 		task.execute();
 	}
@@ -100,6 +109,12 @@ public class StatisticsController extends KarybuFragment implements
 	// Async task for loading the statistics
 	private class GetStatisticsAsyncTask extends AsyncTask<Void, Void, Void> {
 		String response;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			isRefreshing = true;
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -124,6 +139,8 @@ public class StatisticsController extends KarybuFragment implements
 		@Override
 		protected void onPostExecute(Void context) {
 			// check if the user is still logged in
+
+			isRefreshing = false;
 
 			if (array != null && array.stats != null) {
 				buildGraph(array.stats);
