@@ -13,10 +13,17 @@
         android:text="VIEW" />
 
     <Button
-        android:id="@+id/POST_DELETE_POST"
+        android:id="@+id/POST_RECYCLE_POST"
         style="@style/round_button"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/POST_VIEW_POST"
+        android:text="RECYCLE BIN" />
+    
+    <Button
+        android:id="@+id/POST_DELETE_POST"
+        style="@style/round_button"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/POST_RECYCLE_POST"
         android:text="DELETE" />
 
     <TextView
@@ -31,7 +38,7 @@
         android:id="@+id/POST_POST_COMMENT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/POST_DELETE_POST"
+        android:layout_alignBaseline="@+id/POST_RECYCLE_POST"
         android:layout_alignParentLeft="true"
         android:text="Comment count" />
 

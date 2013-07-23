@@ -81,6 +81,8 @@ public class TextylePostAdapter extends BaseAdapter {
 				.findViewById(R.id.POST_VIEW_POST);
 		Button btnDeletePost = (Button) convertView
 				.findViewById(R.id.POST_DELETE_POST);
+		Button btnRecyclePost = (Button) convertView
+				.findViewById(R.id.POST_RECYCLE_POST);
 
 		TextView txtPostTitle = (TextView) convertView
 				.findViewById(R.id.POST_POST_TITLE);
@@ -109,7 +111,29 @@ public class TextylePostAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View v) {
-						DeletePostAsynTask task = new DeletePostAsynTask();
+						ManagePostAsynTask task = new ManagePostAsynTask(
+								"delete");
+						task.execute(post);
+						dialog.dismiss();
+					}
+				});
+				dialog.setNegativeButton(R.string.no);
+				dialog.show();
+			}
+		});
+
+		btnRecyclePost.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final KarybuDialog dialog = new KarybuDialog(context);
+				dialog.setTitle(R.string.recycle_post);
+				dialog.setMessage(R.string.recycle_post_msg);
+				dialog.setPositiveButton(R.string.yes, new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						ManagePostAsynTask task = new ManagePostAsynTask(
+								"trash");
 						task.execute(post);
 						dialog.dismiss();
 					}
@@ -122,10 +146,15 @@ public class TextylePostAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private class DeletePostAsynTask extends
+	private class ManagePostAsynTask extends
 			AsyncTask<KarybuTextylePost, Void, String> {
 
 		private KarybuTextylePost post;
+		private String actionType;
+
+		public ManagePostAsynTask(String actionType) {
+			this.actionType = actionType;
+		}
 
 		@Override
 		protected void onPreExecute() {
@@ -140,7 +169,7 @@ public class TextylePostAdapter extends BaseAdapter {
 			HashMap<String, String> ps = new HashMap<String, String>();
 			ps.put("module", "mobile_communication");
 			ps.put("act", "procmobile_communicationManageCheckedDocument");
-			ps.put("type", "delete");
+			ps.put("type", actionType);
 			ps.put("cart[]", post.document_srl);
 			String strResponse = KarybuHost.getINSTANCE()
 					.postMultipart(ps, "/");

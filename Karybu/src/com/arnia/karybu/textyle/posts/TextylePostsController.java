@@ -23,6 +23,7 @@ import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuPagination;
 import com.arnia.karybu.classes.KarybuTextylePost;
 import com.arnia.karybu.controls.SegmentedRadioGroup;
+import com.arnia.karybu.utilities.CommonUtils;
 
 public class TextylePostsController extends KarybuFragment implements
 		OnScrollListener, OnCheckedChangeListener {
@@ -73,12 +74,12 @@ public class TextylePostsController extends KarybuFragment implements
 		adapter = new TextylePostAdapter(activity);
 		listView.setAdapter(adapter);
 		listView.setOnScrollListener(this);
-		
+
 		onCheckedChanged(radioGroup, R.id.TEXTYLE_POSTS_ALLOPTION);
 
 		return fragmentView;
 	}
-	
+
 	private class GetPostsAsycTask extends
 			AsyncTask<Integer, Void, KarybuArrayList> {
 
@@ -102,7 +103,8 @@ public class TextylePostsController extends KarybuFragment implements
 			int pageNumber = params.length == 0 ? 1 : params[0];
 			String requestUrl = "/index.php?module=mobile_communication"
 					+ "&act=procmobile_communicationTextylePostList&type="
-					+ postType + "&page=" + pageNumber + "&list_count=20";
+					+ postType + "&page=" + pageNumber + "&list_count=20&key="
+					+ CommonUtils.getSha1("karybu-mobile-app");
 
 			String response = KarybuHost.getINSTANCE().postRequest(requestUrl);
 
@@ -224,7 +226,7 @@ public class TextylePostsController extends KarybuFragment implements
 			postType = -1;
 			return;
 		}
-		
+
 		if (postType == -1)
 			return;
 

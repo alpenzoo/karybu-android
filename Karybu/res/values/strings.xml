@@ -58,6 +58,8 @@
 
     <!-- Edit post layout -->
     <string name="delete_post">Delete</string>
+    <string name="recycle_post">Recycle Post</string>
+    <string name="recycle_post_msg">Do you want to move this post to recycle bin?</string>
 
     <!-- Array -->
     <string-array name="page_types">
