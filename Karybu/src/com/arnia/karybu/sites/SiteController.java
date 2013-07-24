@@ -31,6 +31,7 @@ import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.controls.KarybuDialog;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
 import com.arnia.karybu.data.KarybuSite;
+import com.arnia.karybu.utilities.CommonUtils;
 
 public class SiteController extends KarybuFragment implements OnClickListener {
 
@@ -102,10 +103,17 @@ public class SiteController extends KarybuFragment implements OnClickListener {
 				String url = txtUrl.getText().toString().trim();
 				String username = txtUsername.getText().toString().trim();
 				String password = txtPassword.getText().toString().trim();
-				KarybuSite site = new KarybuSite(0, url, username, password);
-				AddSiteBackground task = new AddSiteBackground();
-				task.execute(site);
-				dialog.dismiss();
+				if (url.length() == 0 || username.length() == 0
+						|| password.length() == 0) {
+					Toast.makeText(activity, getString(R.string.invalid_input),
+							Toast.LENGTH_LONG).show();
+				} else {
+					url = CommonUtils.getValidUrl(url);
+					KarybuSite site = new KarybuSite(0, url, username, password);
+					AddSiteBackground task = new AddSiteBackground();
+					task.execute(site);
+					dialog.dismiss();
+				}
 			}
 		});
 		dialog.setNegativeButton(R.string.cancel);

@@ -22,6 +22,7 @@ import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.controls.KarybuDialog;
 import com.arnia.karybu.data.KarybuDatabaseHelper;
+import com.arnia.karybu.utilities.CommonUtils;
 import com.google.android.gcm.GCMRegistrar;
 
 public class LoginController extends KarybuActivity implements OnClickListener {
@@ -63,18 +64,10 @@ public class LoginController extends KarybuActivity implements OnClickListener {
 			invalidInputDialog.setPositiveButton(getString(R.string.close));
 			invalidInputDialog.show();
 		} else {
-			websiteUrl = getURL(websiteUrl);
+			websiteUrl = CommonUtils.getValidUrl(websiteUrl);
 			LogInInBackground task = new LogInInBackground();
 			task.execute(websiteUrl, username, password);
 		}
-	}
-
-	private String getURL(String url) {
-		if (!url.contains("http://"))
-			url = "http://" + url;
-		if (url.substring(url.length() - 1).equals("/"))
-			url = url.substring(0, url.length() - 1);
-		return url;
 	}
 
 	// AsyncTask for LogIn

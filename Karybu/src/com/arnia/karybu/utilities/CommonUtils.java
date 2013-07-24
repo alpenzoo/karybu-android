@@ -42,4 +42,12 @@ public class CommonUtils {
 
 	}
 
+	public static String getValidUrl(String url) {
+		if (!url.contains("http://"))
+			url = "http://" + url;
+		if (url.substring(url.length() - 1).equals("/"))
+			url = url.substring(0, url.length() - 1);
+		return url;
+	}
+
 }
