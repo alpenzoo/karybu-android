@@ -123,6 +123,10 @@
     <!-- Comment -->
     <string name="no_new_comment">No new comments</string>
     <string name="new_comment_count">%s NEW</string>
+    <string name="publish_comment">Publish</string>
+    <string name="unpublish_comment">Unpublish</string>
+    <string name="delete_comment">Delte Comment</string>
+    <string name="delete_comment_msg">Do you want to delete this comment?</string>
 
     <!-- Quick setting --><string name="msg_save_setting_success">Settings have been saved.</string>
 </resources>

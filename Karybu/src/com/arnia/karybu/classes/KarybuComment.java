@@ -1,5 +1,6 @@
 package com.arnia.karybu.classes;
 
+import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class KarybuComment implements Comparable<KarybuComment>
 	public String document_srl;
 	
 	@Element
-	public String is_secret;
+	public String status;
 	
 	@Element
 	public String content;
@@ -45,6 +46,7 @@ public class KarybuComment implements Comparable<KarybuComment>
 	
 	private Date date;
 	
+	@SuppressLint("SimpleDateFormat")
 	public Date getDate() 
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

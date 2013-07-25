@@ -30,9 +30,9 @@ import org.apache.http.util.EntityUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import com.arnia.karybu.utilities.CommonUtils;
-
 import android.util.Log;
+
+import com.arnia.karybu.utilities.CommonUtils;
 
 public class KarybuHost {
 	private static KarybuHost INSTANCE = null;

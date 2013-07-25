@@ -1,8 +1,5 @@
 package com.arnia.karybu;
 
-import com.arnia.karybu.classes.KarybuTextyle;
-import com.arnia.karybu.data.KarybuSite;
-
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+
+import com.arnia.karybu.classes.KarybuTextyle;
+import com.arnia.karybu.data.KarybuSite;
 
 public class KarybuFragment extends Fragment {
 

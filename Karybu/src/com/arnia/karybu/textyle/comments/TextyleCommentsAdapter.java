@@ -1,10 +1,18 @@
 package com.arnia.karybu.textyle.comments;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,14 +20,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuComment;
+import com.arnia.karybu.classes.KarybuHost;
+import com.arnia.karybu.classes.KarybuResponse;
+import com.arnia.karybu.controls.KarybuDialog;
 
 //Adapter for the listView with KarybuComments
 public class TextyleCommentsAdapter extends BaseAdapter {
-	private KarybuFragment context;
+	private Context context;
 	private ArrayList<KarybuComment> comments;
 
 	private ArrayList<KarybuComment> arrayWithReplies;
@@ -31,7 +43,7 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 	}
 
 	// constructor
-	public TextyleCommentsAdapter(KarybuFragment context) {
+	public TextyleCommentsAdapter(Context context) {
 		this.context = context;
 		this.comments = new ArrayList<KarybuComment>();
 
@@ -99,10 +111,10 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup arg2) {
-		KarybuComment comment = arrayWithComments.get(position);
+		final KarybuComment comment = arrayWithComments.get(position);
 
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getActivity()
+			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.cellview_commentitem, null);
 		}
@@ -121,25 +133,43 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 				.findViewById(R.id.TEXTYLE_COMMENTS_CONTENT);
 		txtComment.setText(Html.fromHtml(comment.content));
 
-		Button reply = (Button) convertView
-				.findViewById(R.id.TEXTYLE_COMMENTS_REPLY);
-		reply.setTag(position);
-		reply.setOnClickListener((OnClickListener) context);
+		Button btnPublish = (Button) convertView
+				.findViewById(R.id.TEXTYLE_COMMENTS_PUBLISH);
+		if (comment.status.equals("1"))
+			btnPublish.setText(context.getString(R.string.unpublish_comment));
+		else
+			btnPublish.setText(context.getString(R.string.publish_comment));
+
+		btnPublish.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				publishComment(comment);
+			}
+		});
 
 		Button delete = (Button) convertView
 				.findViewById(R.id.TEXTYLE_COMMENTS_DELETE);
 		delete.setTag(position);
-		delete.setOnClickListener((OnClickListener) context);
+		delete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final KarybuDialog dialog = new KarybuDialog(context);
+				dialog.setTitle(R.string.delete_comment);
+				dialog.setMessage(R.string.delete_comment_msg);
+				dialog.setPositiveButton(R.string.yes, new OnClickListener() {
 
-		Button visibility = (Button) convertView
-				.findViewById(R.id.TEXTYLE_COMMENTS_PUBLIC);
-		visibility.setTag(position);
-		visibility.setOnClickListener((OnClickListener) context);
-
-		if (comment.is_secret.equals("N"))
-			visibility.setText("Public");
-		else
-			visibility.setText("Private");
+					@Override
+					public void onClick(View v) {
+						DeleteCommentAsyncTask task = new DeleteCommentAsyncTask(
+								comment);
+						task.execute();
+						dialog.dismiss();
+					}
+				});
+				dialog.setNegativeButton(R.string.no);
+				dialog.show();
+			}
+		});
 
 		return convertView;
 	}
@@ -149,6 +179,136 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 		arrayWithReplies = new ArrayList<KarybuComment>();
 		arrayWithComments = new ArrayList<KarybuComment>();
 		notifyDataSetChanged();
+	}
+
+	private void publishComment(KarybuComment comment) {
+		boolean newPublishStatus = comment.status.equals("0");
+		ChangeCommentPublishStatus task = new ChangeCommentPublishStatus(
+				comment);
+		task.execute(newPublishStatus);
+	}
+
+	private class ChangeCommentPublishStatus extends
+			AsyncTask<Boolean, Void, Boolean> {
+
+		private KarybuComment comment;
+
+		public ChangeCommentPublishStatus(KarybuComment comment) {
+			this.comment = comment;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(context,
+					context.getString(R.string.processing));
+		}
+
+		@Override
+		protected Boolean doInBackground(Boolean... params) {
+			boolean newStatus = params[0];
+
+			HashMap<String, String> ps = new HashMap<String, String>();
+			ps.put("module", "mobile_communication");
+			ps.put("act", "procmobile_communicationManagePublishCommentStatus");
+			ps.put("will_publish", newStatus ? "1" : "0");
+			ps.put("cart[]", comment.comment_srl);
+
+			try {
+				String strResponse = KarybuHost.getINSTANCE().postMultipart(ps,
+						"/");
+				Log.i("leapkh", "Resp: " + strResponse);
+
+				Serializer serializer = new Persister();
+				Reader reader = new StringReader(strResponse);
+				KarybuResponse response = serializer.read(KarybuResponse.class,
+						reader);
+				if (response.error == 0)
+					return true;
+				else
+					return false;
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return false;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+			if (result) {
+				String newStatus = comment.equals("0") ? "1" : "0";
+				Log.i("leapkh", "New: " + newStatus);
+				arrayWithComments.get(arrayWithComments.indexOf(comment)).status = newStatus;
+				notifyDataSetChanged();
+			} else {
+				Toast.makeText(context, "Change published status fail.",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+	}
+
+	private class DeleteCommentAsyncTask extends AsyncTask<Void, Void, Boolean> {
+
+		private KarybuComment comment;
+
+		public DeleteCommentAsyncTask(KarybuComment comment) {
+			this.comment = comment;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(context,
+					context.getString(R.string.processing));
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+
+			HashMap<String, String> ps = new HashMap<String, String>();
+			ps.put("module", "mobile_communication");
+			ps.put("act", "procmobile_communicationDeleteComment");
+			ps.put("cart[]", comment.comment_srl);
+
+			try {
+				String strResponse = KarybuHost.getINSTANCE().postMultipart(ps,
+						"/");
+				Log.i("leapkh", "Resp: " + strResponse);
+
+				Serializer serializer = new Persister();
+				Reader reader = new StringReader(strResponse);
+				KarybuResponse response = serializer.read(KarybuResponse.class,
+						reader);
+				if (response.error == 0)
+					return true;
+				else
+					return false;
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return false;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+			if (result) {
+				arrayWithComments.remove(comment);
+				notifyDataSetChanged();
+			} else {
+				Toast.makeText(context, "Delete comment fail.",
+						Toast.LENGTH_LONG).show();
+			}
+
+		}
+
 	}
 
 }

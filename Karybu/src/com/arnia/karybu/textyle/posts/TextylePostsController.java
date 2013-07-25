@@ -3,8 +3,10 @@ package com.arnia.karybu.textyle.posts;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;

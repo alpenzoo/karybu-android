@@ -6,25 +6,18 @@
     android:padding="10dp" >
 
     <Button
-        android:id="@+id/TEXTYLE_COMMENTS_REPLY"
+        android:id="@+id/TEXTYLE_COMMENTS_PUBLISH"
         style="@style/round_button"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="Reply" />
+        android:text="@string/publish_comment" />
 
     <Button
         android:id="@+id/TEXTYLE_COMMENTS_DELETE"
         style="@style/round_button"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/TEXTYLE_COMMENTS_REPLY"
+        android:layout_below="@+id/TEXTYLE_COMMENTS_PUBLISH"
         android:text="Delete" />
-
-    <Button
-        android:id="@+id/TEXTYLE_COMMENTS_PUBLIC"
-        style="@style/round_button"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/TEXTYLE_COMMENTS_DELETE"
-        android:text="Public" />
 
     <TextView
         android:id="@+id/TEXTYLE_COMMENTS_NICKNAMETEXTVIEW"

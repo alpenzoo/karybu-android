@@ -19,9 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuArrayList;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuLayout;

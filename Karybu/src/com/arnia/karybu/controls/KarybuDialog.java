@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.arnia.karybu.R;
 
 public class KarybuDialog extends Dialog implements

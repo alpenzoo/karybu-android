@@ -1,5 +1,12 @@
 package com.arnia.karybu;
 
+import java.io.Reader;
+import java.io.StringReader;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.arnia.karybu.classes.KarybuHost;
+import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.classes.KarybuTextyle;
 import com.arnia.karybu.data.KarybuSite;
 import com.arnia.karybu.members.MembersController;
@@ -130,14 +139,46 @@ public class DashboardController extends KarybuFragment implements
 	@Override
 	protected void onSelectedTextyle(KarybuTextyle textyle) {
 		super.onSelectedTextyle(textyle);
-		String commentCountStr;
-		if (textyle == null || Integer.parseInt(textyle.comment_count) == 0)
-			commentCountStr = getString(R.string.no_new_comment);
-		else
-			commentCountStr = String.format(
-					getString(R.string.new_comment_count),
-					textyle.comment_count);
-		commentCount.setText(commentCountStr);
+		GetNewCommentCount task = new GetNewCommentCount();
+		task.execute();
+	}
+
+	private class GetNewCommentCount extends
+			AsyncTask<Void, Void, KarybuResponse> {
+
+		@Override
+		protected KarybuResponse doInBackground(Void... params) {
+
+			try {
+				String responseStr = KarybuHost
+						.getINSTANCE()
+						.postRequest(
+								"/index.php?module=mobile_communication&act=procmobile_communicationGetNewCommentCount");
+				Serializer serializer = new Persister();
+				Reader reader = new StringReader(responseStr);
+				KarybuResponse response = serializer.read(KarybuResponse.class,
+						reader);
+				return response;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(KarybuResponse result) {
+			super.onPostExecute(result);
+			String commentCountStr = getString(R.string.no_new_comment);
+			if (result != null) {
+				if (!result.value.equals("0")) {
+					commentCountStr = String
+							.format(getString(R.string.new_comment_count),
+									result.value);
+				}
+			}
+			commentCount.setText(commentCountStr);
+		}
+
 	}
 
 }

@@ -3,6 +3,7 @@ package com.arnia.karybu.pages;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
+
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 

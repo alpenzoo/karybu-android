@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-import com.arnia.karybu.R;
 
 //Activity that has a ProgressDialog and one method that verifies if the user is logged id
 public class KarybuActivity extends Activity {

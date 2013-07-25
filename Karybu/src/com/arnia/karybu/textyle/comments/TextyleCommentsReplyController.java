@@ -8,9 +8,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.arnia.karybu.R;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
+import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuTextyle;
 

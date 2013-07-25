@@ -1,11 +1,11 @@
 package com.arnia.karybu;
 
-import com.arnia.karybu.data.KarybuDatabaseHelper;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import com.arnia.karybu.data.KarybuDatabaseHelper;
 
 public class StartupController extends KarybuActivity {
 

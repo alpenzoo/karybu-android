@@ -4,8 +4,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.MainActivityController;
 import com.arnia.karybu.R;
