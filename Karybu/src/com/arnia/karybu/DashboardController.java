@@ -168,15 +168,15 @@ public class DashboardController extends KarybuFragment implements
 		@Override
 		protected void onPostExecute(KarybuResponse result) {
 			super.onPostExecute(result);
-			String commentCountStr = getString(R.string.no_new_comment);
-			if (result != null) {
-				if (!result.value.equals("0")) {
-					commentCountStr = String
-							.format(getString(R.string.new_comment_count),
-									result.value);
-				}
+			if (result != null && !result.value.equals("0")) {
+				String commentCountStr = String.format(
+						getString(R.string.new_comment_count), result.value);
+				commentCount.setText(commentCountStr);
+				commentCount.setVisibility(View.VISIBLE);
+			} else {
+				commentCount.setVisibility(View.INVISIBLE);
 			}
-			commentCount.setText(commentCountStr);
+
 		}
 
 	}

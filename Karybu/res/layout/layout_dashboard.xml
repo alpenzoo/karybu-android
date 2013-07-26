@@ -94,7 +94,8 @@
                     android:clickable="false"
                     android:gravity="center"
                     android:text="New Comments"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <View style="@style/dashboard_divider" />
