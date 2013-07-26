@@ -28,6 +28,7 @@ import com.arnia.karybu.classes.KarybuHost;
 import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.classes.KarybuTextylePost;
 import com.arnia.karybu.controls.KarybuDialog;
+import com.arnia.karybu.utilities.CommonUtils;
 
 public class TextylePostAdapter extends BaseAdapter {
 	// array with pages that appear in listview
@@ -171,6 +172,7 @@ public class TextylePostAdapter extends BaseAdapter {
 			ps.put("act", "procmobile_communicationManageCheckedDocument");
 			ps.put("type", actionType);
 			ps.put("cart[]", post.document_srl);
+			ps.put("key", CommonUtils.getSha1("karybu-mobile-app"));
 			String strResponse = KarybuHost.getINSTANCE()
 					.postMultipart(ps, "/");
 

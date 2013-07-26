@@ -56,6 +56,7 @@ public class StatisticsController extends KarybuFragment implements
 	private ImageButton btnArrowLeft;
 	private ImageButton btnArrowRight;
 	private boolean isRefreshing;
+	private boolean isViewDestoryed;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +86,12 @@ public class StatisticsController extends KarybuFragment implements
 	public void onStart() {
 		super.onStart();
 		refreshStatistic();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		isViewDestoryed = true;
 	}
 
 	public void refreshStatistic() {
@@ -151,6 +158,8 @@ public class StatisticsController extends KarybuFragment implements
 
 		@SuppressLint("SimpleDateFormat")
 		private void buildGraph(ArrayList<KarybuDayStats> stats) {
+			if (isViewDestoryed)
+				return;
 			if (stats.size() == 0)
 				return;
 

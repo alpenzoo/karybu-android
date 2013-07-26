@@ -280,7 +280,6 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 			try {
 				String strResponse = KarybuHost.getINSTANCE().postMultipart(ps,
 						"/");
-				Log.i("leapkh", "Resp: " + strResponse);
 
 				Serializer serializer = new Persister();
 				Reader reader = new StringReader(strResponse);

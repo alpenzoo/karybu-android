@@ -1,5 +1,12 @@
 package com.arnia.karybu.pages;
 
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashMap;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,15 +15,18 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.arnia.karybu.KarybuFragment;
 import com.arnia.karybu.R;
 import com.arnia.karybu.classes.KarybuHost;
+import com.arnia.karybu.classes.KarybuResponse;
 import com.arnia.karybu.controls.KarybuTextEditor;
+import com.arnia.karybu.utilities.CommonUtils;
 
 public class EditPageController extends KarybuFragment implements
 		OnClickListener {
-	private String mid;
+	// private String mid;
 	private String document_srl;
 	private KarybuTextEditor htmlEditor;
 	private EditText titleEditText;
@@ -33,7 +43,7 @@ public class EditPageController extends KarybuFragment implements
 		addNestedFragment(R.id.TEXT_EDITOR_HOLDER, htmlEditor, "htmlTextEditor");
 
 		Bundle args = getArguments();
-		mid = args.getString("mid");
+		// mid = args.getString("mid");
 		document_srl = args.getString("document_srl");
 
 		saveButton = (Button) view.findViewById(R.id.PAGE_EDITOR_SAVE);
@@ -94,28 +104,60 @@ public class EditPageController extends KarybuFragment implements
 	}
 
 	// Async Task that saves the page content and title
-	private class SavePageAsyncTask extends AsyncTask<Object, Object, Object> {
+	private class SavePageAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
-		protected Object doInBackground(Object... params) {
+		protected void onPreExecute() {
+			super.onPreExecute();
+			KarybuFragment.startProgress(activity,
+					getString(R.string.processing));
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
 			String content = htmlEditor.getContent();
 			String title = titleEditText.getText().toString();
 
-			String xmlRequest = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"
-					+ "<methodCall>\n<params>\n<_filter><![CDATA[insert_article]]></_filter>\n"
-					+ "<error_return_url><![CDATA[/index.php?mid="
-					+ "&act=dispPageAdminContentModify]]></error_return_url>\n"
-					+ "<act><![CDATA[procPageAdminArticleDocumentInsert]]></act>\n"
-					+ "<mid><![CDATA[" + mid + "]]></mid>\n" + mid
-					+ "<content><![CDATA[" + content + "]]></content>\n"
-					+ "<document_srl><![CDATA[" + document_srl
-					+ "]]></document_srl>\n" + "<title><![CDATA[" + title
-					+ "]]></title><module><![CDATA[page]]></module><"
-					+ "/params></methodCall>";
+			HashMap<String, String> ps = new HashMap<String, String>();
+			ps.put("module", "mobile_communication");
+			ps.put("act", "procmobile_communicationPageEdit");
+			ps.put("title", title);
+			ps.put("content", content);
+			ps.put("document_srl", document_srl);
+			ps.put("key", CommonUtils.getSha1("karybu-mobile-app"));
 
-			KarybuHost.getINSTANCE().postRequest("/index.php", xmlRequest);
+			try {
+				String strResponse = KarybuHost.getINSTANCE().postMultipart(ps,
+						"/");
 
-			return null;
+				Serializer serializer = new Persister();
+				Reader reader = new StringReader(strResponse);
+				KarybuResponse response = serializer.read(KarybuResponse.class,
+						reader);
+				if (response.error == 0)
+					return true;
+				else
+					return false;
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return false;
+			}
+
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			KarybuFragment.dismissProgress();
+			if (result) {
+				Toast.makeText(activity, "Page has been saved.",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(activity, "Fail to save page.",
+						Toast.LENGTH_LONG).show();
+			}
+
 		}
 
 	}
