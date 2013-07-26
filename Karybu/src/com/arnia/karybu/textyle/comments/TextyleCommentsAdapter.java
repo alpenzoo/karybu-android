@@ -143,7 +143,10 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 		btnPublish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				publishComment(comment);
+				Button pulibshButton = (Button) v;
+				boolean newPublishedStatus = pulibshButton.getText().toString()
+						.equals(context.getString(R.string.publish_comment));
+				publishComment(comment, newPublishedStatus);
 			}
 		});
 
@@ -181,8 +184,7 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
-	private void publishComment(KarybuComment comment) {
-		boolean newPublishStatus = comment.status.equals("0");
+	private void publishComment(KarybuComment comment, boolean newPublishStatus) {
 		ChangeCommentPublishStatus task = new ChangeCommentPublishStatus(
 				comment);
 		task.execute(newPublishStatus);
@@ -192,6 +194,7 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 			AsyncTask<Boolean, Void, Boolean> {
 
 		private KarybuComment comment;
+		private boolean newStatus;
 
 		public ChangeCommentPublishStatus(KarybuComment comment) {
 			this.comment = comment;
@@ -206,7 +209,7 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 
 		@Override
 		protected Boolean doInBackground(Boolean... params) {
-			boolean newStatus = params[0];
+			newStatus = params[0];
 
 			HashMap<String, String> ps = new HashMap<String, String>();
 			ps.put("module", "mobile_communication");
@@ -239,9 +242,8 @@ public class TextyleCommentsAdapter extends BaseAdapter {
 			super.onPostExecute(result);
 			KarybuFragment.dismissProgress();
 			if (result) {
-				String newStatus = comment.equals("0") ? "1" : "0";
-				Log.i("leapkh", "New: " + newStatus);
-				arrayWithComments.get(arrayWithComments.indexOf(comment)).status = newStatus;
+				String newStatusStr = newStatus ? "1" : "0";
+				arrayWithComments.get(arrayWithComments.indexOf(comment)).status = newStatusStr;
 				notifyDataSetChanged();
 			} else {
 				Toast.makeText(context, "Change published status fail.",
